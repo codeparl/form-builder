@@ -1,65 +1,71 @@
 {
-  "name": "vite-ts-tailwind-starter",
+  "name": "form-builder",
   "version": "8.2.0",
   "type": "module",
+  "description": "A Form Builder Component for Vue 3",
+  "main": "dist/index.umd.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.es.js"
+    },
+    "./FormBuilder.css": "./dist/FormBuilder.css"
+  },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite build && vite preview",
-    "start": "pnpm dev & wait-on tcp:3000 -v",
-    "test": "vitest",
-    "test-e2e": "playwright test --headed",
-    "coverage": "vitest run --coverage",
+    "build": "vite build && cpx \"src/css/FormBuilder.css\" dist/FormBuilder.css",
+    "ts": "vue-tsc --build --force",
     "lint": "eslint . --fix",
-    "ts": "vue-tsc --build --force"
+    "test": "vitest"
   },
-  "dependencies": {
-    "@unhead/vue": "^2.0.10",
-    "pinia": "^3.0.2",
-    "vue": "^3.5.16",
-    "vue-router": "^4.5.1"
+  "keywords": [
+    "vue3",
+    "form-builder",
+    "component-library"
+  ],
+  "repository": "https://github.com/codeparl/form-builder",
+  "author": "Hassan Mugabo",
+  "license": "MIT",
+  "peerDependencies": {
+    "vue": "^3.2.0"
   },
   "devDependencies": {
-    "@egoist/tailwindcss-icons": "^1.9.0",
-    "@iconify-json/mdi": "^1.2.3",
-    "@pinia/testing": "^1.0.1",
-    "@playwright/test": "^1.52.0",
-    "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.8",
-    "@tsconfig/node22": "^22.0.2",
-    "@types/jsdom": "^21.1.7",
-    "@types/lodash-es": "^4.17.12",
-    "@types/node": "^22.15.29",
-    "@typescript-eslint/eslint-plugin": "^8.33.0",
+    "@types/node": "^24.3.1",
+    "@types/sortablejs": "^1.15.8",
     "@vitejs/plugin-vue": "^6.0.0",
-    "@vitest/coverage-v8": "^3.1.4",
-    "@vitest/eslint-plugin": "^1.2.1",
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/eslint-config-typescript": "^14.5.0",
-    "@vue/test-utils": "^2.4.6",
-    "@vue/tsconfig": "^0.7.0",
-    "cssnano": "^7.0.7",
+    "@vue/tsconfig": "^0.8.1",
     "eslint": "^9.28.0",
-    "eslint-plugin-playwright": "^2.2.0",
-    "eslint-plugin-security": "^3.0.1",
-    "eslint-plugin-vue": "^10.1.0",
-    "jsdom": "^26.1.0",
-    "lodash-es": "^4.17.21",
-    "prettier": "^3.5.3",
+    "naive-ui": "^2.43.1",
     "tailwindcss": "^4.1.8",
-    "typescript": "5.9.2",
+    "typescript": "^5.9.2",
     "unplugin-auto-import": "^19.3.0",
-    "unplugin-vue-components": "^28.7.0",
+    "unplugin-vue-components": "^28.8.0",
+    "vfonts": "^0.0.3",
     "vite": "^7.0.0",
-    "vite-plugin-vue-devtools": "^8.0.0",
+    "vite-plugin-dts": "^4.5.4",
     "vitest": "^3.1.4",
-    "vue-tsc": "^3.0.0",
-    "wait-on": "^8.0.3"
+    "vue-tsc": "^3.0.0"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@tailwindcss/oxide",
-      "esbuild"
-    ]
+  "dependencies": {
+    "@egoist/tailwindcss-icons": "^1.9.0",
+    "@fortawesome/fontawesome-svg-core": "^7.0.1",
+    "@fortawesome/free-solid-svg-icons": "^7.0.1",
+    "@fortawesome/vue-fontawesome": "^3.1.2",
+    "@tailwindcss/typography": "^0.5.16",
+    "interactjs": "^1.10.27",
+    "lucide-vue-next": "^0.544.0",
+    "sortablejs": "^1.15.6",
+    "vue-draggable-next": "^2.3.0",
+    "vue-material-design-icons": "^5.3.1",
+    "vuedraggable": "^4.1.0"
   }
 }

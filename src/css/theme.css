@@ -1,0 +1,16 @@
+/* src/css/theme.css */
+:root {
+  --color-bg: #ffffff;
+  --color-bg-secondary: #f2f2f2;
+  --color-text: #111827;
+  --color-primary: #6366f1;
+  --color-primary-hover: #4f46e5;
+}
+
+[data-theme='dark'] {
+  --color-bg: #1f2937;
+  --color-bg-secondary: #111827;
+  --color-text: #f9fafb;
+  --color-primary: #818cf8;
+  --color-primary-hover: #6366f1;
+}

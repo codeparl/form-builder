@@ -1,0 +1,23 @@
+import type { App } from 'vue'
+
+// Import only the icons you actually use in your library
+import ArrowUp from 'vue-material-design-icons/ArrowUpThin.vue'
+import ArrowDown from 'vue-material-design-icons/ArrowDownThin.vue'
+import DeleteIcon from 'vue-material-design-icons/DeleteOutline.vue'
+import DuplicateIcon from 'vue-material-design-icons/ContentDuplicate.vue'
+import EditIcon from 'vue-material-design-icons/PencilOutline.vue'
+
+// Export them so you can reuse if needed
+export const icons = {
+  ArrowUp,
+  ArrowDown,
+  DeleteIcon,
+  DuplicateIcon,
+  EditIcon,
+}
+
+export function registerIcons(app: App) {
+  Object.entries(icons).forEach(([name, component]) => {
+    app.component(name, component)
+  })
+}

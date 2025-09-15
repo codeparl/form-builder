@@ -1,0 +1,50 @@
+@theme {
+  --*: initial;
+  --font-script: Great Vibes, cursive;
+  --shadow-xl:
+    0 1px 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.07), 0 4px 8px rgba(0, 0, 0, 0.07),
+    0 8px 16px rgba(0, 0, 0, 0.07);
+}
+@import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+
+@layer components {
+  .form-builder {
+    @apply p-4 bg-white rounded-lg shadow-md;
+  }
+
+  .drag-placeholder {
+    @apply !opacity-25;
+  }
+}
+
+.drop-area {
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+  overflow: hidden;
+}
+
+/* Ghost placeholder fills remaining space */
+.drop-placeholder {
+  flex-grow: 1;
+  margin: 4px 0;
+  border: 2px dashed #0e0e0e;
+  background: #e0f2fe;
+  min-height: 50px;
+  opacity: 1 !important; /* fully visible if you want */
+  transition: none !important; /* no fade or movement */
+  animation: none !important;
+}
+
+.dragging {
+  opacity: 1 !important;
+}
+
+.drop-placeholder * {
+  visibility: hidden !important;
+}
+
+.drop-placeholder * {
+  display: none !important;
+}

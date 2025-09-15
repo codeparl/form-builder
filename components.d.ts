@@ -8,8 +8,17 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
-    RouterLink: typeof import('vue-router')['RouterLink']
-    RouterView: typeof import('vue-router')['RouterView']
+    CheckboxField: typeof import('./src/components/fields/CheckboxField.vue')['default']
+    FieldItem: typeof import('./src/components/FieldItem.vue')['default']
+    FormBuilder: typeof import('./src/components/FormBuilder.vue')['default']
+    HeadingField: typeof import('./src/components/fields/HeadingField.vue')['default']
+    ParagraphField: typeof import('./src/components/fields/ParagraphField.vue')['default']
+    RadioField: typeof import('./src/components/fields/RadioField.vue')['default']
+    SectionField: typeof import('./src/components/fields/SectionField.vue')['default']
+    SelectField: typeof import('./src/components/fields/SelectField.vue')['default']
+    Test: typeof import('./src/components/test.vue')['default']
+    TextAreaField: typeof import('./src/components/fields/TextAreaField.vue')['default']
+    TextField: typeof import('./src/components/fields/TextField.vue')['default']
+    ToolBar: typeof import('./src/components/ToolBar.vue')['default']
   }
 }
