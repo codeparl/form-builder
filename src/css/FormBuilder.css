@@ -18,11 +18,18 @@
   }
 }
 
-.drop-area {
+.drop-area,
+#drop-canvas,
+#field-drop-canvas {
   display: flex;
   flex-direction: column;
   min-height: 500px;
   overflow: hidden;
+}
+
+.no-fields-message {
+  min-height: 500px;
+  max-height: 500px;
 }
 
 /* Ghost placeholder fills remaining space */

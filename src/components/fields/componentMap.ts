@@ -5,7 +5,7 @@ import CheckboxField from '@/components/fields/CheckboxField.vue'
 import RadioField from '@/components/fields/RadioField.vue'
 import HeadingField from '@/components/fields/HeadingField.vue'
 import ParagraphField from '@/components/fields/ParagraphField.vue'
-import SectionField from '@/components/fields/SectionField.vue'
+import Button from '@/components/fields/Button.vue'
 
 export const fieldComponentMap: Record<string, any> = {
   text: TextField,
@@ -15,5 +15,5 @@ export const fieldComponentMap: Record<string, any> = {
   radio: RadioField,
   heading: HeadingField,
   paragraph: ParagraphField,
-  section: SectionField,
+  button: Button,
 }

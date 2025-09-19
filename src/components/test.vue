@@ -1,122 +1,128 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, reactive, toRefs } from 'vue'
 import draggable from 'vuedraggable'
 import type { SortableEvent } from 'sortablejs'
-interface FieldType {
-  type: string
-  label: string
-}
+import { useI18n } from '@/i18n/useI18n'
+import { fieldTypes, createField } from '@/data/fieldTypes'
+import type { FormField } from '@/types/fields'
+import FieldItem from './FieldItem.vue'
+import ToolBar from './ToolBar.vue'
+import { defaultOptions } from '../config/defaultOptions'
+import type { FormBuilderOptions } from '../config/types'
+import LanguageSelect from './LanguageSelect.vue'
 
-interface FormField extends FieldType {
-  id: string
-}
+const props = defineProps<{
+  options?: FormBuilderOptions
+}>()
 
-const fieldTypes: FieldType[] = [
-  { type: 'text', label: 'Text Input' },
-  { type: 'textarea', label: 'Textarea' },
-  { type: 'select', label: 'Select Dropdown' },
-  { type: 'checkbox', label: 'Checkbox' },
-  { type: 'radio', label: 'Radio Group' },
-]
-
+const options = reactive({ ...defaultOptions, ...props.options })
 const formFields = ref<FormField[]>([])
+const { t } = useI18n()
 
-// typed clone function ✅
-const cloneField = (el: FieldType): FormField => ({
-  ...el,
-  id: Date.now().toString() + Math.random().toString(36).slice(2),
-})
+const { setLanguage } = useI18n()
+setLanguage(options.language)
 
-const canDrop = ref<Boolean>(false)
+const cloneField = (el: FormField): FormField => createField(el)
 
-const onDragStart = (evt: SortableEvent) => {
-  canDrop.value = false
-  console.log('Drag started', evt)
-}
+const onDragStart = (evt: SortableEvent) => {}
 
-const onDragEnd = (evt: SortableEvent) => {
-  canDrop.value = true
-  const canvasEl = document.querySelector('#drop-canvas')
-  const target = evt.explicitOriginalTarget
-  const rawData = evt.item.dataset.field
+const onDragEnd = (evt: SortableEvent) => {}
 
-  if (rawData && target.id == canvasEl?.id) {
-    const field = JSON.parse(rawData)
-    formFields.value.splice(evt.newIndex, 0, field)
-    console.log('Drag ended', evt, rawData)
+const onMove = (evt: any) => {}
+
+const moveFieldUp = (index: number) => {
+  if (index > 0) {
+    const item = formFields.value.splice(index, 1)[0]
+    formFields.value.splice(index - 1, 0, item)
   }
 }
-let isHovering = ref(false)
-const onMoveCallback = (evt: any) => {
-  console.log(evt)
+
+const moveFieldDown = (index: number) => {
+  if (index < formFields.value.length - 1) {
+    const item = formFields.value.splice(index, 1)[0]
+    formFields.value.splice(index + 1, 0, item)
+  }
+}
+
+const duplicateField = (field: FormField, index: number) => {
+  const copy = { ...field, id: Date.now().toString() }
+  formFields.value.splice(index + 1, 0, copy)
+}
+
+const editField = (field: FormField, index: number) => {
+  console.log('Open edit dialog for:', field)
 }
 </script>
 
 <template>
-  <div class="min-h-screen flex bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-    <!-- Sidebar -->
-    <aside class="w-1/4 border-r border-gray-200 dark:border-gray-700 p-4">
-      <h2 class="text-lg font-semibold mb-4">Field Types</h2>
-      <draggable
-        :list="fieldTypes"
-        :group="{ name: 'fields', pull: 'clone', put: false }"
-        item-key="type"
-        :clone="cloneField"
-        :chosen-class="'drag-chosen'"
-        :sort="true"
-        class="space-y-2 droped"
-        :animation="200"
-        @start="onDragStart"
-        @end="onDragEnd"
-        @move="onMoveCallback"
-        :ghost-class="'draggable-ghost'"
-      >
-        <template #item="{ element }">
-          <div
-            :data-field="JSON.stringify(element)"
-            class="cursor-move rounded bg-white dark:bg-gray-800 p-2 shadow hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
-          >
-            {{ element.label }}
-          </div>
-        </template>
-      </draggable>
-    </aside>
+  <n-message-provider>
+    <div class="min-h-screen flex">
+      <main class="flex-1 relative p-6">
+        <ToolBar :form-fields="formFields" @clear="formFields = []" @save="" />
 
-    <!-- Canvas -->
-    <main class="flex-1 p-6">
-      <h2 :class="[canDrop ? 'text-red-600' : '']" class="text-lg font-semibold mb-4">Form Canvas</h2>
-      <draggable
-        id="drop-canvas"
-        v-model="formFields"
-        :group="{ name: 'fields', pull: false, put: canDrop }"
-        item-key="id"
-        class="min-h-[400px] border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 flex flex-col gap-3 bg-white dark:bg-gray-800 snap-y snap-mandatory overflow-y-auto"
-        :animation="300"
-        :class="{ '!bg-blue-700': isHovering }"
-      >
-        <template #item="{ element, index }">
-          <div
-            class="p-3 duration-500 rounded border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 snap-start transition-transform"
-          >
-            {{ index + 1 }}. {{ element.label }}
-          </div>
-        </template>
-      </draggable>
-    </main>
-  </div>
+        <div
+          v-if="formFields.length === 0"
+          class="absolute top-[70px] no-fields-message text-lg inset-0 flex items-center justify-center text-gray-400 dark:text-gray-500 pointer-events-none select-none text-center px-4"
+        >
+          {{ t('canvas.placeholder') }}
+        </div>
+
+        <draggable
+          id="drop-canvas"
+          v-model="formFields"
+          :group="{ name: 'fields', pull: false, put: true }"
+          item-key="id"
+          chosen-class="drop-chosen"
+          :ghost-class="'drop-placeholder'"
+          class="overflow-x-hidden shadow-xl mx-auto drop-area border-gray-500 gap-1 border-dashed rounded-lg p-2 flex flex-col bg-white dark:bg-gray-800"
+          :animation="300"
+          :class="[formFields.length == 0 ? 'border-2' : '']"
+          tag="ul"
+        >
+          <template #item="{ element, index }">
+            <FieldItem
+              :element="element"
+              :index="index"
+              @delete="formFields.splice($event, 1)"
+              @move-up="moveFieldUp"
+              @move-down="moveFieldDown"
+              @duplicate="duplicateField"
+              @edit="editField"
+            />
+          </template>
+        </draggable>
+      </main>
+
+      <aside class="w-1/4 border-l border-gray-200 dark:border-gray-700 p-4">
+        <LanguageSelect />
+        <draggable
+          :list="fieldTypes"
+          :group="{ name: 'fields', pull: 'clone', put: true }"
+          item-key="type"
+          :clone="cloneField"
+          :sort="true"
+          class="cursor-move m-0 p-0 flex flex-col gap-0 border border-gray-400 py-0 justify-start rounded bg-white dark:bg-gray-800 shadow-md"
+          :animation="300"
+          drag-class="dragging"
+          chosen-class="drag-chosen"
+          ghost-class="drag-placeholder"
+          :force-fallback="true"
+          tag="ul"
+          :fallback-on-body="true"
+        >
+          <template #item="{ element }">
+            <li
+              :key="element.type"
+              class="flex items-center border-b bg-white border-gray-400 py-[9px] px-2 gap-2 my-0 cursor-move hover:bg-gray-100"
+            >
+              <component :is="element.icon" class="w-5 h-5 text-gray-600 dark:text-gray-300" />
+              <span
+                ><span>{{ t(`field.${element.type}`) }}</span></span
+              >
+            </li>
+          </template>
+        </draggable>
+      </aside>
+    </div>
+  </n-message-provider>
 </template>
-
-<style scoped>
-/* Optional: add pointer cursor during drag */
-.draggable-ghost {
-  opacity: 1;
-  background-color: red;
-  transition: transform 0.2s ease;
-}
-
-.drag-chosen {
-  opacity: 1; /* dim original element while dragging */
-  border: 2px solid #6366f1;
-  background-color: #e0e7ff;
-}
-</style>

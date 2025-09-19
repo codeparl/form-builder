@@ -8,10 +8,19 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Button: typeof import('./src/components/fields/Button.vue')['default']
+    Canvas: typeof import('./src/components/Canvas.vue')['default']
+    CanvasComponent: typeof import('./src/components/CanvasComponent.vue')['default']
     CheckboxField: typeof import('./src/components/fields/CheckboxField.vue')['default']
     FieldItem: typeof import('./src/components/FieldItem.vue')['default']
+    FieldOptionalPanel: typeof import('./src/components/fields/FieldOptionalPanel.vue')['default']
+    FieldOptionsPanel: typeof import('./src/components/fields/FieldOptionsPanel.vue')['default']
     FormBuilder: typeof import('./src/components/FormBuilder.vue')['default']
+    FormSectionItem: typeof import('./src/components/FormSectionItem.vue')['default']
+    FormTest: typeof import('./src/components/FormTest.vue')['default']
     HeadingField: typeof import('./src/components/fields/HeadingField.vue')['default']
+    LanguageSelect: typeof import('./src/components/LanguageSelect.vue')['default']
+    Palette: typeof import('./src/components/Palette.vue')['default']
     ParagraphField: typeof import('./src/components/fields/ParagraphField.vue')['default']
     RadioField: typeof import('./src/components/fields/RadioField.vue')['default']
     SectionField: typeof import('./src/components/fields/SectionField.vue')['default']

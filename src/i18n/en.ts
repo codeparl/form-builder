@@ -1,0 +1,31 @@
+export default {
+  canvas: {
+    placeholder: 'Drag a field from the right to this area',
+    heading: 'Form Design',
+  },
+  toolbar: {
+    clear: 'Clear All',
+    save: 'Save',
+    viewJson: 'View JSON',
+    addSection: 'Add Section',
+  },
+  field: {
+    button: 'Button',
+    text: 'Text Field',
+    textarea: 'Textarea',
+    select: 'Select Dropdown',
+    checkbox: 'Checkbox',
+    radio: 'Radio Group',
+    date: 'Date Picker',
+    file: 'File Upload',
+    heading: 'Heading',
+    paragraph: 'Paragraph',
+    section: 'Section',
+    placeholder: 'Placeholder',
+    helpText: 'Help Text',
+    class: 'CSS Class',
+    name: 'Name',
+    required: 'Required',
+    label: 'Label',
+  },
+}

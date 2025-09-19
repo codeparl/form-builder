@@ -1,6 +1,6 @@
 // src/data/fieldTypes.ts
 import type { FormField } from '../types/fields'
-
+import { useI18n } from '@/i18n/useI18n'
 // Import Vue Material Design Icons
 import TextBoxOutline from 'vue-material-design-icons/TextBoxOutline.vue'
 import CheckboxMarkedOutlineIcon from 'vue-material-design-icons/CheckboxMarkedOutline.vue'
@@ -14,36 +14,43 @@ import FileDocumentOutlineIcon from 'vue-material-design-icons/FileDocumentOutli
 // Structural / Content Icons
 import FormatHeader1Icon from 'vue-material-design-icons/FormatHeader1.vue'
 import FormatParagraphIcon from 'vue-material-design-icons/FormatParagraph.vue'
-import FolderOutlineIcon from 'vue-material-design-icons/FolderOutline.vue'
 
 export interface FieldType {
   type: string
-  label: string
   icon?: any
 }
 
 // Default available field types (used in sidebar for dragging)
 export const fieldTypes: FieldType[] = [
-  { type: 'button', label: 'Button', icon: ButtonCursor },
-  { type: 'text', label: 'Text Input', icon: FormTextBox },
-  { type: 'textarea', label: 'Textarea', icon: TextBoxOutline },
-  { type: 'select', label: 'Select', icon: FormSelect },
-  { type: 'checkbox', label: 'Checkbox', icon: CheckboxMarkedOutlineIcon },
-  { type: 'radio', label: 'Radio Group', icon: RadioboxMarkedIcon },
-  { type: 'date', label: 'Date Picker', icon: CalendarIcon },
-  { type: 'file', label: 'File Upload', icon: FileDocumentOutlineIcon },
+  { type: 'button', icon: ButtonCursor },
+  { type: 'text', icon: FormTextBox },
+  { type: 'textarea', icon: TextBoxOutline },
+  { type: 'select', icon: FormSelect },
+  { type: 'checkbox', icon: CheckboxMarkedOutlineIcon },
+  { type: 'radio', icon: RadioboxMarkedIcon },
+  { type: 'date', icon: CalendarIcon },
+  { type: 'file', icon: FileDocumentOutlineIcon },
 
-  // Content / Structural elements
-  { type: 'heading', label: 'Heading', icon: FormatHeader1Icon },
-  { type: 'paragraph', label: 'Paragraph', icon: FormatParagraphIcon },
-  { type: 'section', label: 'Section', icon: FolderOutlineIcon },
+  { type: 'heading', icon: FormatHeader1Icon },
+  { type: 'paragraph', icon: FormatParagraphIcon },
 ]
+let fieldIdCounter = 0
 
-// Function to create a new form field with unique ID
-export const createField = (fieldType: FieldType): FormField => ({
-  ...fieldType,
-  id: Date.now().toString(36) + Math.random().toString(36).slice(2),
-  required: false,
-  // Sections can have children fields
-  children: fieldType.type === 'section' ? [] : undefined,
-})
+export const createField = (fieldType: FieldType): FormField => {
+  const id = Date.now().toString() + '-' + fieldIdCounter++
+  const { t } = useI18n()
+  // Base field
+  const field: FormField = {
+    id,
+    type: fieldType.type,
+    subType: fieldType.type,
+    name: `${fieldType.type}-${id}`,
+    label: t(`field.${fieldType.type}`),
+    required: false,
+    value: null,
+    editable: true,
+    class: 'form-control',
+  }
+
+  return field
+}
