@@ -4,6 +4,7 @@ import draggable from 'vuedraggable'
 import FieldItem from './FieldItem.vue'
 import type { FormField, FormSection } from '@/types/fields'
 import { useDragAndDrop } from '@/composable/useDragAndDrop'
+import { useI18n } from '@/i18n/useI18n'
 
 // Props & emits
 const props = defineProps<{
@@ -11,10 +12,11 @@ const props = defineProps<{
   sectionIndex: number
 }>()
 
+const { t } = useI18n()
 const emit = defineEmits(['update:section', 'delete-section', 'edit-field'])
 
 // Collapsed & edit panel
-const collapsed = ref(false)
+const collapsed = ref(!props.section.editable)
 const showEditPanel = ref(false)
 const sectionRef = toRef(props, 'section')
 // Inject composable
@@ -33,7 +35,8 @@ const saveSectionDetails = () => {
 
 // Clear all fields
 const clearFields = () => {
-  props.section.fields.splice(0, props.section.fields.length)
+  props.section.fields.filter(f => f.editable == true).splice(0, props.section.fields.length)
+
   emit('update:section', props.section)
 }
 </script>
@@ -54,6 +57,7 @@ const clearFields = () => {
         <n-button
           class="!bg-transparent !border-0"
           tertiary
+          v-if="props.section.editable"
           title="Edit details"
           size="tiny"
           @click="showEditPanel = true"
@@ -75,6 +79,7 @@ const clearFields = () => {
           title="Delete section"
           size="tiny"
           type="error"
+          v-if="props.section.editable"
           tertiary
           @click="emit('delete-section', props.sectionIndex)"
         >
@@ -90,7 +95,14 @@ const clearFields = () => {
 
     <!-- Fields -->
     <transition name="slide-toggle">
-      <div v-show="!collapsed" class="bg-white rounded border border-gray-300 p-2">
+      <div v-show="!collapsed" class="bg-white rounded border border-gray-300 relative p-2">
+        <div
+          v-if="props.section.fields.length == 0"
+          class="no-fields-message text-center w-full h-full flex flex-col justify-center top-0 bottom-0 absolute text-2xl text-gray-800"
+        >
+          <div class="text-gray-500">{{ t('canvas.placeholder') }}</div>
+        </div>
+
         <draggable
           v-model="props.section.fields"
           :group="{ name: 'fields', pull: false, put: true }"

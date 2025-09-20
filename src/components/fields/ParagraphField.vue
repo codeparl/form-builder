@@ -1,11 +1,12 @@
-<template>
-  <p>Paragraph text</p>
-</template>
-
 <script setup lang="ts">
-// ParagraphField component logic here
+import type { FormField } from '@/types/fields'
+
+// v-model binding for the field
+const model = defineModel<FormField>('value')
+
+// Watch model → update local state when parent changes
 </script>
 
-<style scoped>
-/* ParagraphField styles */
-</style>
+<template>
+  <p>{{ model?.text ?? 'Paragraph' }}</p>
+</template>

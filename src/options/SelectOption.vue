@@ -1,87 +1,68 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { reactive } from 'vue'
 import type { FormField } from '@/types/fields'
 
-const props = defineProps<{
-  field?: FormField
-}>()
+// Icons
+import PlusIcon from 'vue-material-design-icons/Plus.vue'
+import DeleteIcon from 'vue-material-design-icons/Close.vue'
 
-const emit = defineEmits<{
-  (e: 'update', field: FormField): void
-}>()
+// v-model binding for the field
+const model = defineModel<FormField>('value')
 
-const name = ref('')
-const options = ref<string>('') // comma-separated options
-const helpText = ref('')
-const cssClass = ref('')
+// Local reactive state for select options
+const selectOptions = reactive({
+  items: model.value?.options || [],
+})
 
-watch(
-  () => props.field,
-  f => {
-    if (f) {
-      name.value = f.name || ''
-      options.value = (f.options || []).join(',')
-      helpText.value = f.helpText || ''
-      cssClass.value = f.class || ''
+// Add a new blank option
+const addOption = () => {
+  selectOptions.items.push('')
+  syncModel()
+}
+
+// Remove an option by index
+const removeOption = (index: number) => {
+  selectOptions.items.splice(index, 1)
+  syncModel()
+}
+
+// Update model when options change
+const syncModel = () => {
+  if (model.value) {
+    model.value = {
+      ...model.value,
+      options: [...selectOptions.items],
     }
-  },
-  { immediate: true }
-)
-
-const updateField = () => {
-  if (!props.field) return
-  emit('update', {
-    ...props.field,
-    name: name.value,
-    options: options.value.split(',').map(o => o.trim()),
-    helpText: helpText.value,
-    class: cssClass.value,
-  })
+  }
 }
 </script>
 
 <template>
-  <div class="p-4 space-y-3 bg-gray-50 dark:bg-gray-800 rounded shadow-md w-full max-w-sm">
-    <h3 class="font-semibold text-gray-700 dark:text-gray-200">Select Field Options</h3>
+  <div class="p-0 space-y-3 w-full max-w-sm">
+    <label class="block text-sm text-gray-600 dark:text-gray-300">Options</label>
 
-    <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Name</label>
-      <input
-        type="text"
-        v-model="name"
-        @input="updateField"
-        class="w-full border rounded p-1 dark:bg-gray-700 dark:text-gray-200"
+    <!-- Render each option input -->
+    <div v-for="(option, index) in selectOptions.items" :key="index" class="flex items-center gap-2">
+      <n-input
+        v-model:value="selectOptions.items[index]"
+        size="small"
+        placeholder="Enter option"
+        @input="syncModel"
+        class="flex-1"
       />
+      <n-button size="tiny" type="error" ghost @click="removeOption(index)">
+        <template #icon>
+          <delete-icon />
+        </template>
+      </n-button>
     </div>
 
-    <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Options (comma separated)</label>
-      <input
-        type="text"
-        v-model="options"
-        @input="updateField"
-        class="w-full border rounded p-1 dark:bg-gray-700 dark:text-gray-200"
-      />
-    </div>
-
-    <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Help Text</label>
-      <input
-        type="text"
-        v-model="helpText"
-        @input="updateField"
-        class="w-full border rounded p-1 dark:bg-gray-700 dark:text-gray-200"
-      />
-    </div>
-
-    <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Class</label>
-      <input
-        type="text"
-        v-model="cssClass"
-        @input="updateField"
-        class="w-full border rounded p-1 dark:bg-gray-700 dark:text-gray-200"
-      />
-    </div>
+    <!-- Add option button -->
+    <n-button size="tiny" type="primary" ghost @click="addOption">
+      <template #icon>
+        <plus-icon />
+      </template>
+      Add Option
+    </n-button>
   </div>
 </template>

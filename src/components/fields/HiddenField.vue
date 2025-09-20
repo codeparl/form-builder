@@ -1,34 +1,34 @@
 <script setup lang="ts">
-import { reactive, watch } from 'vue'
+import { watch, reactive } from 'vue'
 import type { FormField } from '@/types/fields'
 
-// v-model binding for the field
+// v-model binding
 const model = defineModel<FormField>('value')
-
-// Local reactive state for the input value
+if (model.value) model.value.category = 'html'
+// Local state for hidden field value
 const inputState = reactive({
-  text: model.value?.value ?? '',
+  hidden: model.value?.value ?? '',
 })
 
-// Watch model → update local state when parent changes
+// Sync parent → local
 watch(
   model,
   f => {
     if (f) {
-      inputState.text = f.value ?? ''
+      inputState.hidden = f.value ?? ''
     }
   },
   { immediate: true }
 )
 
-// Watch local state → update model when user edits
+// Sync local → parent
 watch(
   inputState,
   val => {
     if (model.value) {
       model.value = {
         ...model.value,
-        value: val.text,
+        value: val.hidden,
       }
     }
   },
@@ -37,5 +37,5 @@ watch(
 </script>
 
 <template>
-  <section>{{ inputState.text }}</section>
+  <n-input type="hidden" :name="model?.name" v-model="inputState.hidden" />
 </template>

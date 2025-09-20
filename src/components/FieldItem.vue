@@ -93,7 +93,7 @@ const confirmDelete = () => {
 
     <!-- Field Content -->
     <ul class="p-3 cursor-move bg-white">
-      <li>
+      <li class="w-full">
         <component :is="fieldComponent" v-model:value="editableField" />
       </li>
     </ul>

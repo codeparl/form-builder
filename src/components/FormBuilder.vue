@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, computed, toRef } from 'vue'
+import { ref, reactive, toRef } from 'vue'
 import type { FormField, FormSection } from '@/types/fields'
 import { fieldTypes, createField } from '@/data/fieldTypes'
 import { useI18n } from '@/i18n/useI18n'
@@ -11,16 +11,19 @@ import type { FormBuilderOptions } from '../config/types'
 import { addSection, useDragAndDrop } from '@/composable/useDragAndDrop'
 import CanvasComponent from './CanvasComponent.vue'
 import type { Language } from '@/i18n'
+
 const { t } = useI18n()
 
 // Props & options
-const props = defineProps<{ options?: FormBuilderOptions }>()
+const props = defineProps<{ options?: FormBuilderOptions; sections?: FormSection[] }>()
 const option = reactive({ ...defaultOptions, ...props.options })
 
 // Sections
 const formSections = ref<FormSection[]>([])
 
-if (formSections.value.length === 0) {
+if (props.sections && Array.isArray(props.sections) && props.sections.length > 0) {
+  formSections.value = props.sections
+} else {
   addSection(formSections)
 }
 
@@ -37,12 +40,22 @@ const { onDragStart, onDragEnd, onMove, moveFieldUp, moveFieldDown, duplicateFie
 
 // Clear all sections
 const clearSections = () => {
-  formSections.value = []
-  addSection(formSections)
+  // Keep non-editable sections
+  const nonEditableSections = formSections.value.filter(section => section.editable === false)
+  formSections.value = [...nonEditableSections]
+  if (!formSections.value.some(section => section.editable !== false) && nonEditableSections.length == 0) {
+    addSection(formSections)
+  }
 }
 
 const addNewSection = () => {
   addSection(formSections)
+}
+
+// ✅ Handle imported JSON
+const onImportJson = (sections: FormSection[]) => {
+  if (!Array.isArray(sections)) return
+  formSections.value = sections
 }
 </script>
 
@@ -52,7 +65,14 @@ const addNewSection = () => {
       <div class="min-h-screen flex flex-col md:flex-row">
         <main class="md:flex-1 relative p-6">
           <!-- Toolbar -->
-          <ToolBar :form-sections="formSections" @clear="clearSections" @add-section="addNewSection" />
+          <ToolBar
+            :allow-export="props.options?.allowExport"
+            :allow-import="props.options?.allowImport"
+            :form-sections="formSections"
+            @clear="clearSections"
+            @add-section="addNewSection"
+            @import="onImportJson"
+          />
 
           <CanvasComponent
             v-model:sections="formSections"

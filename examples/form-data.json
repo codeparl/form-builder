@@ -1,0 +1,58 @@
+[
+  {
+    "id": "section-1758346398184",
+    "title": "Application Form",
+    "description": "",
+    "editable": false,
+    "fields": [
+      {
+        "id": "1758346403955-0",
+        "type": "text",
+        "subType": "text",
+        "name": "text-1758346403955-0",
+        "label": "Text Field",
+        "required": false,
+        "value": null,
+        "editable": false,
+        "category": "input",
+        "class": "form-control"
+      },
+      {
+        "id": "1758346405287-1",
+        "type": "textarea",
+        "subType": "textarea",
+        "name": "textarea-1758346405287-1",
+        "label": "Textarea",
+        "required": false,
+        "value": null,
+        "editable": false,
+        "category": "input",
+        "class": "form-control"
+      },
+      {
+        "id": "1758346406605-2",
+        "type": "checkbox",
+        "subType": "checkbox",
+        "name": "checkbox-1758346406605-2",
+        "label": "Checkbox",
+        "required": false,
+        "value": null,
+        "editable": true,
+        "category": "input",
+        "class": "form-control"
+      },
+      {
+        "id": "1758346407890-3",
+        "type": "select",
+        "subType": "select",
+        "name": "select-1758346407890-3",
+        "label": "Select Dropdown",
+        "required": false,
+        "value": null,
+        "editable": true,
+        "category": "input",
+        "class": "form-control"
+      }
+    ]
+  }
+]

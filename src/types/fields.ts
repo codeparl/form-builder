@@ -1,4 +1,4 @@
-export type FieldCategory = 'text' | 'number' | 'choice' | 'boolean' | 'button' | 'layout'
+export type FieldCategory = 'html' | 'input' | 'button' | 'layout' | 'file' | 'hidden'
 
 export interface FormField {
   id: string
@@ -17,9 +17,16 @@ export interface FormField {
   options?: any[]
   min?: number
   max?: number
+  rows?: number
+  columns?: number
   step?: number
   style?: string
+  category?: FieldCategory
+  text?: string
+  level?: number
+  multiple?: boolean
   pattern?: string
+  accept?: string
   children?: FormField[]
   [key: string]: any
 }
@@ -34,39 +41,4 @@ export interface FormSection {
 
 export interface FormSchema {
   sections: FormSection[]
-}
-
-export const fieldCategoryMap: Record<string, FieldCategory> = {
-  // Text-like inputs
-  text: 'text',
-  email: 'text',
-  password: 'text',
-  color: 'text',
-  url: 'text',
-  textarea: 'text',
-
-  // Numeric inputs
-  number: 'number',
-  range: 'number',
-
-  // Choice inputs
-  select: 'choice',
-  radio: 'choice',
-  checkbox: 'choice',
-
-  // Boolean
-  switch: 'boolean',
-
-  // Buttons
-  button: 'button',
-  submit: 'button',
-  reset: 'button',
-
-  // Layout/grouping
-  section: 'layout',
-  group: 'layout',
-}
-
-export const getFieldCategory = (type: string): FieldCategory | undefined => {
-  return fieldCategoryMap[type]
 }

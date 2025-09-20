@@ -11,5 +11,7 @@ export interface FormBuilderOptions {
   showPlaceholderMessage?: boolean
   placeholderText?: string
   maxFields?: number
+  allowExport?: boolean
+  allowImport?: boolean
   defaultFieldProps?: DefaultFieldProps
 }

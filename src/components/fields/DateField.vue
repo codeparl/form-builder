@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import type { FormField } from '@/types/fields'
-import { NSelect } from 'naive-ui'
+import { NInput } from 'naive-ui'
 
 // v-model binding for the field
 const model = defineModel<FormField>('value')
 
 // Local reactive state for the input value
 const inputState = reactive({
-  selected: model.value?.value ?? '',
+  date: model.value?.value ?? '',
 })
 
 // Watch model → update local state when parent changes
@@ -16,7 +16,7 @@ watch(
   model,
   f => {
     if (f) {
-      inputState.selected = f.value ?? ''
+      inputState.date = f.value ?? ''
     }
   },
   { immediate: true }
@@ -29,7 +29,7 @@ watch(
     if (model.value) {
       model.value = {
         ...model.value,
-        value: val.selected,
+        value: val.date,
       }
     }
   },
@@ -39,11 +39,6 @@ watch(
 
 <template>
   <div class="w-full">
-    <n-select
-      v-model:value="inputState.selected"
-      :options="model?.options?.map(o => ({ label: o, value: o }))"
-      size="small"
-      placeholder="Select an option"
-    />
+    <n-input type="text" class="w-full" v-model:value="inputState.date" placeholder="YYYY-MM-DD" size="small" />
   </div>
 </template>

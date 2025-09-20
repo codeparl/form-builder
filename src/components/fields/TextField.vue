@@ -37,7 +37,13 @@ watch(
 </script>
 
 <template>
-  <div class="w-full max-w-sm">
-    <n-input type="text" v-model:value="inputState.text" placeholder="Enter default value" size="small" />
+  <div class="w-full">
+    <n-input
+      type="text"
+      class="w-full"
+      v-model:value="inputState.text"
+      placeholder="Enter default value"
+      size="small"
+    />
   </div>
 </template>

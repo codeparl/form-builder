@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import type { FormField } from '@/types/fields'
+import type { FormField, FieldCategory } from '@/types/fields'
 import { useI18n } from '@/i18n/useI18n'
 import { fieldOptions } from '@/components/fields/fieldOptionComponents'
 
@@ -53,34 +53,65 @@ const onCancel = () => {
       </div>
 
       <div class="p-2 px-4">
-        <!-- Required -->
-        <n-form-item v-if="editableField.type !== 'button'" :label="t('field.required')">
-          <n-checkbox v-model:checked="editableField.required">
-            {{ t('Required') }}
-          </n-checkbox>
-        </n-form-item>
+        <!-- Only render general fields if not hidden -->
+        <template v-if="editableField.category !== 'hidden'">
+          <!-- Required -->
+          <n-form-item
+            v-if="!['button', 'html', 'layout'].includes(editableField.category as FieldCategory)"
+            :label="t('field.required')"
+          >
+            <n-checkbox v-model:checked="editableField.required">
+              {{ t('Required') }}
+            </n-checkbox>
+          </n-form-item>
 
-        <n-form-item :label="t('field.name')">
-          <n-input v-model:value="editableField.name" placeholder="Enter field name" />
-        </n-form-item>
+          <!-- Name -->
+          <n-form-item
+            v-if="!['html', 'layout'].includes(editableField.category as FieldCategory)"
+            :label="t('field.name')"
+          >
+            <n-input v-model:value="editableField.name" placeholder="Enter field name" />
+          </n-form-item>
 
-        <n-form-item :label="t('field.label')">
-          <n-input v-model:value="editableField.label" placeholder="Enter field label" />
-        </n-form-item>
+          <!-- Label -->
+          <n-form-item v-if="!['layout'].includes(editableField.category as FieldCategory)" :label="t('field.label')">
+            <n-input v-model:value="editableField.label" placeholder="Enter field label" />
+          </n-form-item>
 
-        <n-form-item v-if="editableField.type !== 'button'" :label="t('field.placeholder')">
-          <n-input v-model:value="editableField.placeholder" placeholder="Enter placeholder text" />
-        </n-form-item>
+          <!-- Placeholder -->
+          <n-form-item
+            v-if="!['button', 'html', 'layout'].includes(editableField.category as FieldCategory)"
+            :label="t('field.placeholder')"
+          >
+            <n-input v-model:value="editableField.placeholder" placeholder="Enter placeholder text" />
+          </n-form-item>
 
-        <n-form-item v-if="editableField.type !== 'button'" :label="t('field.helpText')">
-          <n-input v-model:value="editableField.helpText" placeholder="Enter help text" />
-        </n-form-item>
+          <!-- Help Text -->
+          <n-form-item
+            v-if="!['button', 'html', 'layout'].includes(editableField.category as FieldCategory)"
+            :label="t('field.helpText')"
+          >
+            <n-input v-model:value="editableField.helpText" placeholder="Enter help text" />
+          </n-form-item>
 
-        <n-form-item :label="t('field.class')">
-          <n-input v-model:value="editableField.class" placeholder="Add custom CSS class" />
-        </n-form-item>
+          <!-- Class -->
+          <n-form-item :label="t('field.class')">
+            <n-input v-model:value="editableField.class" placeholder="Add custom CSS class" />
+          </n-form-item>
+        </template>
 
-        <!-- Field-specific options -->
+        <!-- Hidden field: only name & value -->
+        <template v-else>
+          <n-form-item :label="t('field.name')">
+            <n-input v-model:value="editableField.name" placeholder="Enter hidden field name" />
+          </n-form-item>
+
+          <n-form-item :label="t('field.value')">
+            <n-input v-model:value="editableField.value" placeholder="Enter hidden field value" />
+          </n-form-item>
+        </template>
+
+        <!-- Field-specific options (works for both hidden and other types) -->
         <component
           v-if="editableField.type && fieldOptions[editableField.type]"
           :is="fieldOptions[editableField.type]"

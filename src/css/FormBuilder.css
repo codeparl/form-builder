@@ -27,17 +27,13 @@
   overflow: hidden;
 }
 
-.no-fields-message {
-  min-height: 500px;
-  max-height: 500px;
-}
-
 /* Ghost placeholder fills remaining space */
 .drop-placeholder {
   flex-grow: 1;
   margin: 4px 0;
   border: 2px dashed #0e0e0e;
   background: #e0f2fe;
+  z-index: 5 !important;
   min-height: 50px;
   opacity: 1 !important; /* fully visible if you want */
   transition: none !important; /* no fade or movement */

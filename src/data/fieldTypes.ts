@@ -1,5 +1,5 @@
 // src/data/fieldTypes.ts
-import type { FormField } from '../types/fields'
+import type { FieldCategory, FormField } from '../types/fields'
 import { useI18n } from '@/i18n/useI18n'
 // Import Vue Material Design Icons
 import TextBoxOutline from 'vue-material-design-icons/TextBoxOutline.vue'
@@ -10,7 +10,8 @@ import FormTextBox from 'vue-material-design-icons/FormTextbox.vue'
 import CalendarIcon from 'vue-material-design-icons/Calendar.vue'
 import ButtonCursor from 'vue-material-design-icons/ButtonCursor.vue'
 import FileDocumentOutlineIcon from 'vue-material-design-icons/FileDocumentOutline.vue'
-
+import Pound from 'vue-material-design-icons/Pound.vue'
+import HiddenFolder from 'vue-material-design-icons/FolderHidden.vue'
 // Structural / Content Icons
 import FormatHeader1Icon from 'vue-material-design-icons/FormatHeader1.vue'
 import FormatParagraphIcon from 'vue-material-design-icons/FormatParagraph.vue'
@@ -24,13 +25,14 @@ export interface FieldType {
 export const fieldTypes: FieldType[] = [
   { type: 'button', icon: ButtonCursor },
   { type: 'text', icon: FormTextBox },
+  { type: 'hidden', icon: HiddenFolder },
+  { type: 'number', icon: Pound },
   { type: 'textarea', icon: TextBoxOutline },
   { type: 'select', icon: FormSelect },
   { type: 'checkbox', icon: CheckboxMarkedOutlineIcon },
   { type: 'radio', icon: RadioboxMarkedIcon },
   { type: 'date', icon: CalendarIcon },
   { type: 'file', icon: FileDocumentOutlineIcon },
-
   { type: 'heading', icon: FormatHeader1Icon },
   { type: 'paragraph', icon: FormatParagraphIcon },
 ]
@@ -49,6 +51,7 @@ export const createField = (fieldType: FieldType): FormField => {
     required: false,
     value: null,
     editable: true,
+    category: 'input' as FieldCategory,
     class: 'form-control',
   }
 
