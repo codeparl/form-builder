@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import { useDialog } from 'naive-ui'
-import type { FormField } from '@/types/fields'
+import type { FormField, FormSection } from '@/types/fields'
 import { fieldComponentMap } from '@/components/fields/componentMap'
 import { useI18n } from '@/i18n/useI18n'
 
@@ -9,6 +9,7 @@ const { t } = useI18n()
 const props = defineProps<{
   element: FormField
   index: number
+  section: FormSection
 }>()
 
 const emit = defineEmits<{
@@ -74,18 +75,24 @@ const confirmDelete = () => {
           <arrow-down />
         </button>
         <button
+          v-if="section.editable"
           class="p-1 text-gray-300 cursor-pointer hover:text-green-600"
           @click="$emit('duplicate', editableField, index)"
         >
           <duplicate-icon />
         </button>
         <button
+          v-if="section.editable"
           class="p-1 text-gray-300 cursor-pointer hover:text-indigo-600"
           @click="$emit('edit', editableField, index)"
         >
           <edit-icon />
         </button>
-        <button class="p-1 text-gray-300 cursor-pointer hover:text-red-600" @click="confirmDelete">
+        <button
+          v-if="section.editable"
+          class="p-1 text-gray-300 cursor-pointer hover:text-red-600"
+          @click="confirmDelete"
+        >
           <delete-icon />
         </button>
       </div>

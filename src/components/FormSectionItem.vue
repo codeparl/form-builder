@@ -5,6 +5,7 @@ import FieldItem from './FieldItem.vue'
 import type { FormField, FormSection } from '@/types/fields'
 import { useDragAndDrop } from '@/composable/useDragAndDrop'
 import { useI18n } from '@/i18n/useI18n'
+import lock from 'vue-material-design-icons/Lock.vue'
 
 // Props & emits
 const props = defineProps<{
@@ -53,11 +54,12 @@ const clearFields = () => {
         </button>
         <h3>{{ props.section.title || `Section ${props.sectionIndex + 1}` }}</h3>
       </div>
+
       <div class="flex gap-2">
+        <lock title="Section locked" class="w-4 h-4 text-orange-500" />
         <n-button
           class="!bg-transparent !border-0"
           tertiary
-          v-if="props.section.editable"
           title="Edit details"
           size="tiny"
           @click="showEditPanel = true"
@@ -65,6 +67,7 @@ const clearFields = () => {
           <edit-icon class="w-4 h-4" />
         </n-button>
         <n-button
+          v-if="props.section.editable"
           class="!bg-transparent !border-0"
           title="Clear all fields"
           size="tiny"
@@ -105,7 +108,7 @@ const clearFields = () => {
 
         <draggable
           v-model="props.section.fields"
-          :group="{ name: 'fields', pull: false, put: true }"
+          :group="{ name: 'fields', pull: false, put: section.editable }"
           item-key="id"
           tag="ul"
           chosen-class="drop-chosen"
@@ -117,6 +120,7 @@ const clearFields = () => {
           <template #item="{ element: field, index: fieldIndex }">
             <FieldItem
               :element="field"
+              :section="section"
               :index="fieldIndex"
               @move-up="moveFieldUp(fieldIndex)"
               @move-down="moveFieldDown(fieldIndex)"

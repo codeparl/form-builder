@@ -34,6 +34,7 @@ export interface FormField {
 export interface FormSection {
   id: string
   title: string
+  priority?: number
   description?: string
   editable: boolean
   fields: FormField[]

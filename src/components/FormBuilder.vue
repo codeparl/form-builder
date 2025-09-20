@@ -14,6 +14,8 @@ import type { Language } from '@/i18n'
 
 const { t } = useI18n()
 
+const emit = defineEmits(['save'])
+
 // Props & options
 const props = defineProps<{ options?: FormBuilderOptions; sections?: FormSection[] }>()
 const option = reactive({ ...defaultOptions, ...props.options })
@@ -52,6 +54,10 @@ const addNewSection = () => {
   addSection(formSections)
 }
 
+const onSave = () => {
+  emit('save', formSections)
+}
+
 // ✅ Handle imported JSON
 const onImportJson = (sections: FormSection[]) => {
   if (!Array.isArray(sections)) return
@@ -72,6 +78,7 @@ const onImportJson = (sections: FormSection[]) => {
             @clear="clearSections"
             @add-section="addNewSection"
             @import="onImportJson"
+            @save="onSave"
           />
 
           <CanvasComponent

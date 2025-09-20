@@ -56,7 +56,6 @@ const onViewJson = () => {
 // Save
 const onSave = () => {
   emit('save', props.formSections)
-  message.success(t('Form saved successfully!'))
 }
 
 // Add Section

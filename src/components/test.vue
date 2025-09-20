@@ -126,3 +126,4 @@ const editField = (field: FormField, index: number) => {
     </div>
   </n-message-provider>
 </template>
+<FormBuilder :options="options" :sections="formData" @save="saveData" />

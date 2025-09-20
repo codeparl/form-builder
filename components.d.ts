@@ -9,15 +9,14 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Button: typeof import('./src/components/fields/Button.vue')['default']
-    Canvas: typeof import('./src/components/Canvas.vue')['default']
     CanvasComponent: typeof import('./src/components/CanvasComponent.vue')['default']
     CheckboxField: typeof import('./src/components/fields/CheckboxField.vue')['default']
     DateField: typeof import('./src/components/fields/DateField.vue')['default']
     FieldItem: typeof import('./src/components/FieldItem.vue')['default']
-    FieldOptionalPanel: typeof import('./src/components/fields/FieldOptionalPanel.vue')['default']
     FieldOptionsPanel: typeof import('./src/components/fields/FieldOptionsPanel.vue')['default']
     FileField: typeof import('./src/components/fields/FileField.vue')['default']
     FormBuilder: typeof import('./src/components/FormBuilder.vue')['default']
+    FormRenderer: typeof import('./src/components/FormRenderer.vue')['default']
     FormSectionItem: typeof import('./src/components/FormSectionItem.vue')['default']
     FormTest: typeof import('./src/components/FormTest.vue')['default']
     HeadingField: typeof import('./src/components/fields/HeadingField.vue')['default']

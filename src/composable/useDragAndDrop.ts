@@ -62,6 +62,7 @@ export function addSection(sections: Ref<FormSection[]>) {
     id: `section-${Date.now()}`,
     title: `New Section ${sections.value.length + 1}`,
     description: '',
+    priority: 0,
     editable: true,
     fields: [],
   })
