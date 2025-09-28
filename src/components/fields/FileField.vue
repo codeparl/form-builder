@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import type { FormField } from '@/types/fields'
-import { NInput } from 'naive-ui'
+import TextInput from '../inputs/TextInput.vue'
 
 // v-model binding for the field
 const model = defineModel<FormField>('value')
@@ -39,6 +39,6 @@ watch(
 
 <template>
   <div class="w-full">
-    <n-input type="text" class="w-full" v-model:value="inputState.file" placeholder="File path" size="small" />
+    <TextInput type="file" class="w-full" v-model="inputState.file" placeholder="File path" size="small" />
   </div>
 </template>

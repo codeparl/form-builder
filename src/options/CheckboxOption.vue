@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import type { FormField } from '@/types/fields'
-import { NCheckbox } from 'naive-ui'
 
 // v-model binding for the field
 const model = defineModel<FormField>('value')
@@ -38,7 +37,5 @@ watch(
 </script>
 
 <template>
-  <div class="w-full">
-    <n-checkbox v-model:checked="inputState.checked" size="small" />
-  </div>
+  <div class="w-full"></div>
 </template>

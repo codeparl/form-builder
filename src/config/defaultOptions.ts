@@ -1,14 +1,15 @@
 import type { FormBuilderOptions } from './types'
 
 export const defaultOptions: FormBuilderOptions = {
-  theme: 'light', // or 'dark'
+  darkMode: false, // or 'dark'
   language: 'en',
   showToolbar: true,
-  showPlaceholderMessage: true,
-  placeholderText: 'Drag a field from the right to this area',
   maxFields: 50,
   allowExport: true,
   allowImport: true,
+  showSaveBtn: true,
+  showThemeToggleBtn: true,
+  allowViewSchema: true,
   defaultFieldProps: {
     required: false,
     placeholder: '',

@@ -1,53 +1,61 @@
-@theme {
-  --*: initial;
-  --font-script: Great Vibes, cursive;
-  --shadow-xl:
-    0 1px 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.07), 0 4px 8px rgba(0, 0, 0, 0.07),
-    0 8px 16px rgba(0, 0, 0, 0.07);
-}
-@import 'tailwindcss';
-@plugin "@tailwindcss/typography";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@layer components {
-  .form-builder {
-    @apply p-4 bg-white rounded-lg shadow-md;
+@layer utilities {
+  .drop-area,
+  #drop-canvas,
+  #field-drop-canvas {
+    @apply flex flex-col min-h-[500px] overflow-hidden;
   }
 
-  .drag-placeholder {
-    @apply !opacity-25;
+  .drop-placeholder {
+    @apply flex-1 my-4 border-2 border-dashed border-[#0e0e0e] !bg-[#e0f2fe] 
+  z-[5] min-h-[50px] opacity-100 !transition-none !animate-none;
+  }
+
+  .drop-placeholder-dark {
+    @apply flex-1 my-4 border-2 border-dashed border-gray-900 !bg-gray-950 
+  z-[5] min-h-[50px] opacity-100 !transition-none !animate-none;
+  }
+
+  .sortable-fallback.dragging {
+    @apply !opacity-100 !bg-red-600;
+  }
+
+  .drop-placeholder *,
+  .drop-placeholder-dark * {
+    @apply !invisible !hidden;
+  }
+
+  body .ub.sortable-fallback.dragging {
+    @apply bg-white   shadow-md rounded-md list-none !opacity-100 flex items-center  py-[9px]  px-2 gap-2 my-0;
+  }
+
+  body .ub.sortable-fallback.dragging.dark {
+    @apply !bg-neutral-900 text-gray-400;
+  }
+
+  body .ub.sortable-fallback.drop-dragging {
+    @apply !bg-white !h-auto !opacity-100 rounded-md;
+  }
+
+  body .ub.sortable-fallback.drop-dragging.dark {
+    @apply !bg-neutral-900;
   }
 }
-
-.drop-area,
-#drop-canvas,
-#field-drop-canvas {
-  display: flex;
-  flex-direction: column;
-  min-height: 500px;
-  overflow: hidden;
+body .ub.sortable-fallback.dragging {
+  border: 1px solid rgb(177, 177, 177) !important;
 }
 
-/* Ghost placeholder fills remaining space */
-.drop-placeholder {
-  flex-grow: 1;
-  margin: 4px 0;
-  border: 2px dashed #0e0e0e;
-  background: #e0f2fe;
-  z-index: 5 !important;
-  min-height: 50px;
-  opacity: 1 !important; /* fully visible if you want */
-  transition: none !important; /* no fade or movement */
-  animation: none !important;
+body .ub.sortable-fallback.dragging.dark {
+  border: 1px solid rgb(46, 46, 46) !important;
 }
 
-.dragging {
-  opacity: 1 !important;
+body .ub.sortable-fallback.drop-dragging {
+  border: 1px solid rgb(177, 177, 177) !important;
 }
 
-.drop-placeholder * {
-  visibility: hidden !important;
-}
-
-.drop-placeholder * {
-  display: none !important;
+body .ub.sortable-fallback.drop-dragging.dark {
+  border: 1px solid rgb(66, 66, 66) !important;
 }

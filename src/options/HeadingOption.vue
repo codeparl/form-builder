@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import type { FieldCategory, FormField } from '@/types/fields'
-import { NInput, NSelect } from 'naive-ui'
+import SelectInput from '@/components/inputs/SelectInput.vue'
+import TextInput from '@/components/inputs/TextInput.vue'
 
 // v-model binding for the field
 const model = defineModel<FormField>('value')
@@ -49,9 +50,9 @@ watch(
   <div class="p-0 space-y-3 w-full max-w-sm">
     <!-- Level -->
     <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Level</label>
-      <n-select
-        v-model:value="headingOptions.level"
+      <label class="block text-sm">Level</label>
+      <SelectInput
+        v-model="headingOptions.level"
         :options="[
           { label: 'H1', value: 1 },
           { label: 'H2', value: 2 },
@@ -66,8 +67,8 @@ watch(
 
     <!-- Text -->
     <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Text</label>
-      <n-input v-model:value="headingOptions.text" size="small" placeholder="Heading text" />
+      <label class="block text-sm">Text</label>
+      <TextInput v-model="headingOptions.text" size="small" placeholder="Heading text" />
     </div>
   </div>
 </template>

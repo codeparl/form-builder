@@ -5,7 +5,7 @@ export interface DefaultFieldProps {
 }
 
 export interface FormBuilderOptions {
-  theme?: 'light' | 'dark'
+  darkMode?: boolean
   language?: string
   showToolbar?: boolean
   showPlaceholderMessage?: boolean
@@ -13,5 +13,8 @@ export interface FormBuilderOptions {
   maxFields?: number
   allowExport?: boolean
   allowImport?: boolean
+  showSaveBtn?: boolean
+  showThemeToggleBtn?: boolean
+  allowViewSchema?: boolean
   defaultFieldProps?: DefaultFieldProps
 }

@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import type { FormField } from '@/types/fields'
-import { NButton } from 'naive-ui'
-import type { Type as ButtonType, Size as ButtonSize } from 'naive-ui/es/button/src/interface'
 // v-model binding for the field
 const model = defineModel<FormField>('value')
 
@@ -10,8 +8,8 @@ const model = defineModel<FormField>('value')
 const buttonState = reactive({
   label: model.value?.label || 'Click Me',
   type: model.value?.subType || 'primary',
-  style: (model.value?.style as ButtonType) || 'primary',
-  size: (model.value?.size as ButtonSize) || 'medium', // naive-ui sizes: tiny, small, medium, large
+  style: model.value?.buttonStyle ?? 'default',
+  size: model.value?.size || 'medium',
 })
 
 // Watch parent model → update local state
@@ -22,7 +20,7 @@ watch(
       buttonState.label = f.label || 'Click Me'
       buttonState.type = f.subType || 'primary'
       buttonState.size = f.size || 'medium'
-      buttonState.style = (f.style as ButtonType) || 'primary'
+      buttonState.style = f.buttonStyle || 'default'
     }
   },
   { immediate: true }
@@ -38,7 +36,7 @@ watch(
         label: val.label,
         subType: val.type,
         size: val.size,
-        style: val.style,
+        buttonStyle: val.style,
       }
     }
   },
@@ -47,7 +45,7 @@ watch(
 </script>
 
 <template>
-  <n-button :type="buttonState.style as ButtonType" :size="buttonState.size as ButtonSize">
+  <ButtonInput :type="buttonState.style" :is-outline="true" :size="buttonState.size">
     {{ buttonState.label }}
-  </n-button>
+  </ButtonInput>
 </template>

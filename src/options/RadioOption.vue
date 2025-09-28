@@ -1,42 +1,46 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import type { FormField } from '@/types/fields'
-import { NInput } from 'naive-ui'
+import TextInput from '@/components/inputs/TextInput.vue' // Your custom TextInput
+import ButtonInput from '@/components/inputs/ButtonInput.vue' // Your custom ButtonInput
+import PlusIcon from 'vue-material-design-icons/Plus.vue'
 
 // v-model binding for the field
 const model = defineModel<FormField>('value')
 
 // Local reactive state for radio options
 const radioOptions = reactive({
-  options: (model.value?.options || []).join(','),
+  items: model.value?.options || ['Option 1', 'Option 2', 'Option 3'],
   defaultValue: model.value?.defaultValue || '',
 })
 
-// Watch model → update local state when parent changes
-watch(
-  model,
-  f => {
-    if (f) {
-      radioOptions.options = (f.options || []).join(',')
-      radioOptions.defaultValue = f.defaultValue || ''
-    }
-  },
-  { immediate: true }
-)
+// Add a new blank option
+const addOption = () => {
+  radioOptions.items.push('')
+  syncModel()
+}
 
-// Watch local state → update model when user edits
-watch(
-  radioOptions,
-  val => {
-    if (model.value) {
-      model.value = {
-        ...model.value,
-        options: val.options.split(',').map(o => o.trim()),
-        defaultValue: val.defaultValue,
-      }
+// Remove an option by index
+const removeOption = (index: number) => {
+  radioOptions.items.splice(index, 1)
+  syncModel()
+}
+
+// Sync local options to model
+const syncModel = () => {
+  if (model.value) {
+    model.value = {
+      ...model.value,
+      options: [...radioOptions.items],
+      defaultValue: radioOptions.defaultValue,
     }
-  },
-  { deep: true }
+  }
+}
+syncModel()
+// Watch defaultValue changes
+watch(
+  () => radioOptions.defaultValue,
+  () => syncModel()
 )
 </script>
 
@@ -44,14 +48,31 @@ watch(
   <div class="p-0 space-y-3 w-full max-w-sm">
     <!-- Options -->
     <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Options (comma separated)</label>
-      <n-input v-model:value="radioOptions.options" size="small" placeholder="Option1, Option2, Option3" />
-    </div>
+      <label class="block text-sm">Options</label>
 
-    <!-- Default Value -->
-    <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Default Value</label>
-      <n-input v-model:value="radioOptions.defaultValue" size="small" placeholder="Default selected option" />
+      <div v-for="(opt, index) in radioOptions.items" :key="index" class="flex items-center gap-2 mt-1">
+        <TextInput
+          v-model="radioOptions.items[index]"
+          size="small"
+          placeholder="Enter option"
+          @input="syncModel"
+          class="flex-1"
+        />
+        <ButtonInput
+          size="tiny"
+          class="bg-transparent border-0 hover:bg-transparent !text-red-600"
+          type="error"
+          @click="removeOption(index)"
+        >
+          <DeleteIcon />
+        </ButtonInput>
+      </div>
+
+      <!-- Add option button -->
+      <ButtonInput size="small" :is-outline="true" class="flex justify-between mt-2" type="success" @click="addOption">
+        <PlusIcon />
+        <span>Add Option</span>
+      </ButtonInput>
     </div>
   </div>
 </template>

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
-import { useDialog } from 'naive-ui'
 import type { FormField, FormSection } from '@/types/fields'
 import { fieldComponentMap } from '@/components/fields/componentMap'
 import { useI18n } from '@/i18n/useI18n'
-
+import { dialog } from '@/plugins/dialog'
+import { useFormBuilderTheme } from '@/store/theme'
+const theme = useFormBuilderTheme()
 const { t } = useI18n()
 const props = defineProps<{
   element: FormField
@@ -21,7 +22,6 @@ const emit = defineEmits<{
 }>()
 
 const fieldComponent = computed(() => fieldComponentMap[props.element.type])
-const dialog = useDialog()
 
 // --- Local editable copy ---
 const editableField = ref<FormField>({ ...props.element })
@@ -35,19 +35,17 @@ watch(
   { immediate: true, deep: true }
 )
 
-// Watch local editableField → propagate changes to parent element
 watch(
   editableField,
   val => {
     if (val) {
-      // update original element directly
       Object.assign(props.element, val)
     }
   },
   { deep: true }
 )
 
-// Confirm delete
+// Confirm delete using custom dialog
 const confirmDelete = () => {
   dialog.warning({
     title: 'Confirm Delete',
@@ -60,46 +58,49 @@ const confirmDelete = () => {
 </script>
 
 <template>
-  <div class="rounded border border-gray-400 bg-white shadow-md">
+  <div
+    :class="[theme.darkMode ? 'bg-neutral-900 border-gray-800 dark ' : 'border-gray-400 bg-white']"
+    class="rounded border shadow-md ub-vue-form-builder ub dragged"
+  >
     <!-- Toolbar/Header -->
-    <div class="flex items-center cursor-move justify-between p-2 border-b border-gray-400 dark:border-gray-700">
-      <span class="text-sm field-label font-medium text-gray-600 dark:text-gray-300">
-        {{ t('field.' + element.type) }} <span class="text-gray-400">&mdash; {{ element.id }}</span>
+    <div
+      class="flex items-center cursor-move justify-between p-2 border-b"
+      :class="[theme.darkMode ? 'border-gray-800 text-gray-400' : 'border-gray-400 text-gray-300']"
+    >
+      <span class="text-sm field-label font-medium">
+        {{ t('field.' + (element.subType || element.type)) }}
+        <span class="text-gray-00">&mdash; {{ element.id }}</span>
       </span>
 
       <div class="flex field-actions text-sm space-x-2">
-        <button class="text-sm text-gray-300 cursor-pointer hover:text-blue-600" @click="$emit('move-up', index)">
+        <button class="text-sm cursor-pointer hover:text-blue-600" @click="$emit('move-up', index)">
           <arrow-up />
         </button>
-        <button class="p-1 cursor-pointer text-gray-300 hover:text-blue-600" @click="$emit('move-down', index)">
+        <button class="p-1 cursor-pointer hover:text-blue-600" @click="$emit('move-down', index)">
           <arrow-down />
         </button>
         <button
           v-if="section.editable"
-          class="p-1 text-gray-300 cursor-pointer hover:text-green-600"
+          class="p-1 cursor-pointer hover:text-green-600"
           @click="$emit('duplicate', editableField, index)"
         >
           <duplicate-icon />
         </button>
         <button
           v-if="section.editable"
-          class="p-1 text-gray-300 cursor-pointer hover:text-indigo-600"
+          class="p-1 cursor-pointer hover:text-indigo-600"
           @click="$emit('edit', editableField, index)"
         >
           <edit-icon />
         </button>
-        <button
-          v-if="section.editable"
-          class="p-1 text-gray-300 cursor-pointer hover:text-red-600"
-          @click="confirmDelete"
-        >
+        <button v-if="section.editable" class="p-1 cursor-pointer hover:text-red-600" @click="confirmDelete">
           <delete-icon />
         </button>
       </div>
     </div>
 
     <!-- Field Content -->
-    <ul class="p-3 cursor-move bg-white">
+    <ul class="p-3 cursor-move">
       <li class="w-full">
         <component :is="fieldComponent" v-model:value="editableField" />
       </li>

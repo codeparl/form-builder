@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import type { FormField } from '@/types/fields'
+import TextInput from '@/components/inputs/TextInput.vue'
 
 // v-model binding for the field
 const model = defineModel<FormField>('value')
@@ -55,26 +56,26 @@ watch(
   <div class="p-0 space-y-3 w-full max-w-sm">
     <!-- Type -->
     <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Type</label>
+      <label class="block text-sm">Type</label>
       <n-select v-model:value="numberOptions.numberType" :options="types" size="small" placeholder="Type" />
     </div>
 
     <!-- Min -->
     <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Min</label>
-      <n-input type="number" v-model:value="numberOptions.min" size="small" placeholder="Enter min value" />
+      <label class="block text-sm">Min</label>
+      <TextInput type="number" v-model="numberOptions.min" size="small" placeholder="Enter min value" />
     </div>
 
     <!-- Max -->
     <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Max</label>
-      <n-input type="number" v-model:value="numberOptions.max" size="small" placeholder="Enter max value" />
+      <label class="block text-sm">Max</label>
+      <TextInput type="number" v-model="numberOptions.max" size="small" placeholder="Enter max value" />
     </div>
 
     <!-- Step -->
     <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Step</label>
-      <n-input type="number" v-model:value="numberOptions.step" size="small" placeholder="Enter step value" />
+      <label class="block text-sm">Step</label>
+      <TextInput type="number" v-model="numberOptions.step" size="small" placeholder="Enter step value" />
     </div>
   </div>
 </template>

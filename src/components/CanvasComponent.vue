@@ -5,18 +5,31 @@ import { useI18n } from '@/i18n/useI18n'
 import type { FormField, FormSection } from '@/types/fields'
 import FieldOptionsPanel from './fields/FieldOptionsPanel.vue'
 import FormSectionItem from '@/components/FormSectionItem.vue'
-import { addSection } from '@/composable/useDragAndDrop'
+import { addSection, useDragAndDrop } from '@/composable/useDragAndDrop'
+import { useFormBuilderTheme } from '@/store/theme'
 
+const theme = useFormBuilderTheme()
+
+// ---------------- Props & Emits ----------------
 const props = defineProps<{ sections: FormSection[] }>()
 const emit = defineEmits(['update:sections'])
 
+// ---------------- i18n ----------------
 const { t } = useI18n()
 
+// ---------------- Editing State ----------------
 const editingField = ref<FormField | null>(null)
 const editingSectionIndex = ref(-1)
 const editingFieldIndex = ref(-1)
 const showOptionsPanel = ref(false)
 
+// ---------------- Drag & Drop ----------------
+// Always bind drag/drop helpers to first section
+const firstSection = toRef(props.sections, 0)
+const { onDragStart, onDragEnd, onMove, moveFieldUp, moveFieldDown, duplicateField, editField } =
+  useDragAndDrop(firstSection)
+
+// ---------------- Field & Section Updates ----------------
 const onEditField = (field: FormField, sectionIndex: number, fieldIndex: number) => {
   editingField.value = { ...field }
   editingSectionIndex.value = sectionIndex
@@ -39,7 +52,7 @@ const onUpdateSection = (section: FormSection, sectionIndex: number) => {
 
 const deleteSection = (sectionIndex: number) => {
   props.sections.splice(sectionIndex, 1)
-  if (props.sections.length == 0) {
+  if (props.sections.length === 0) {
     const secs = toRef(props.sections)
     addSection(secs)
   }
@@ -58,8 +71,11 @@ const deleteSection = (sectionIndex: number) => {
       chosen-class="drop-chosen-sec"
       :ghost-class="'drop-sec-ghost'"
       :animation="300"
-      class="overflow-x-hidden border-2 bg-white shadow-xl mx-auto border-gray-500 gap-1 border-dashed rounded-lg p-2 flex flex-col dark:bg-gray-800"
-      @end="emit('update:sections', props.sections)"
+      :class="[theme.darkMode ? 'border-gray-700' : 'border-gray-500 bg-white']"
+      class="overflow-x-hidden mx-auto gap-1 border-dashed p-2 flex flex-col"
+      @start="onDragStart"
+      @move="onMove"
+      @end="onDragEnd"
     >
       <template #item="{ element: section, index: sectionIndex }">
         <FormSectionItem
@@ -68,6 +84,10 @@ const deleteSection = (sectionIndex: number) => {
           @update:section="section => onUpdateSection(section, sectionIndex)"
           @delete-section="deleteSection(sectionIndex)"
           @edit-field="onEditField"
+          @move-up="moveFieldUp"
+          @move-down="moveFieldDown"
+          @duplicate="duplicateField"
+          @edit="editField"
         />
       </template>
     </draggable>

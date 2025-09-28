@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import type { FormField } from '@/types/fields'
-import { NInput } from 'naive-ui'
+import TextareaInput from '@/components/inputs/TextareaInput.vue'
+import SelectInput from '@/components/inputs/SelectInput.vue'
 
 // v-model binding for the field
 const model = defineModel<FormField>('value')
@@ -11,7 +12,7 @@ if (model.value) {
 }
 // Local reactive state for paragraph options
 const paragraphOptions = reactive({
-  text: model.value?.text,
+  text: model.value?.text ?? '',
   subType: model.value?.subType,
 })
 
@@ -57,13 +58,13 @@ watch(
   <div class="p-0 space-y-3 w-full max-w-sm">
     <!-- Text -->
     <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Text</label>
-      <n-input type="textarea" v-model:value="paragraphOptions.text" size="small" placeholder="Paragraph text" />
+      <label class="block text-sm">Text</label>
+      <TextareaInput v-model="paragraphOptions.text" size="small" placeholder="Paragraph text" />
     </div>
 
     <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Type</label>
-      <n-select v-model:value="paragraphOptions.subType" :options="types" size="small" placeholder="Type" />
+      <label class="block text-sm">Type</label>
+      <SelectInput v-model="paragraphOptions.subType" :options="types" size="small" placeholder="Type" />
     </div>
   </div>
 </template>

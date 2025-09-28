@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue'
 import { useI18n } from '../i18n/useI18n'
 import { languages } from '../i18n/languages'
+import SelectInput from './inputs/SelectInput.vue'
 const { currentLang, setLanguage } = useI18n()
 
 const onLanguageChange = (lang: string) => {
@@ -17,8 +18,8 @@ const currentLangRef = ref(currentLang.value)
 </script>
 <template>
   <div class="mb-4">
-    <n-select
-      v-model:value="currentLang"
+    <SelectInput
+      v-model="currentLang"
       :options="languages"
       size="small"
       placeholder="Select Language"

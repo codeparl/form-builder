@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import type { FormField } from '@/types/fields'
-import { NRadioGroup, NRadio } from 'naive-ui'
+import RadionGroup from '../inputs/RadionGroup.vue'
 
 // v-model binding for the field
 const model = defineModel<FormField>('value')
@@ -9,6 +9,7 @@ const model = defineModel<FormField>('value')
 // Local reactive state for the input value
 const inputState = reactive({
   selected: model.value?.value ?? '',
+  options: model.value?.options ?? ['Option 1', 'Option 2', 'Option 3'],
 })
 
 // Watch model → update local state when parent changes
@@ -17,6 +18,7 @@ watch(
   f => {
     if (f) {
       inputState.selected = f.value ?? ''
+      inputState.options = f.options ?? ['Option 1', 'Option 2', 'Option 3']
     }
   },
   { immediate: true }
@@ -39,8 +41,6 @@ watch(
 
 <template>
   <div class="w-full">
-    <n-radio-group v-model:value="inputState.selected" size="small">
-      <n-radio v-for="option in model?.options" :key="option" :value="option">{{ option }}</n-radio>
-    </n-radio-group>
+    <RadionGroup :options="inputState.options" v-model="inputState.selected" size="medium" />
   </div>
 </template>

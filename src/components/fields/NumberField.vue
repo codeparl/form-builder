@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import type { FormField } from '@/types/fields'
+import TextInput from '../inputs/TextInput.vue'
 
 // v-model binding for the field
 const model = defineModel<FormField>('value')
@@ -42,8 +43,8 @@ watch(
       {{ model.label }}
     </label>
 
-    <n-input
-      v-model:value="inputState.number"
+    <TextInput
+      v-model="inputState.number"
       :type="model?.subType || 'number'"
       class="w-full"
       size="small"

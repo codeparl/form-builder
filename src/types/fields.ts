@@ -15,12 +15,14 @@ export interface FormField {
   readonly?: boolean
   editable: boolean
   options?: any[]
+  values?: any[]
   min?: number
   max?: number
   rows?: number
   columns?: number
   step?: number
   style?: string
+  buttonStyle?: string
   category?: FieldCategory
   text?: string
   level?: number
@@ -35,6 +37,7 @@ export interface FormSection {
   id: string
   title: string
   priority?: number
+  open?: boolean
   description?: string
   editable: boolean
   fields: FormField[]

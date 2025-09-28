@@ -2,24 +2,24 @@
   <div class="p-6">
     <h1 class="text-2xl font-bold mb-4">Form Builder Playground</h1>
 
-    <FormRenderer :sections="formData" />
+    <FormBuilder :options="options" :is-dark-mode="true" @save="saveData" />
   </div>
 </template>
 
 <script setup lang="ts">
 import FormBuilder from '../src/components/FormBuilder.vue'
 import formData from './form-data.json'
-import FormRenderer from '../src/components/FormRenderer.vue'
 
 const options = {
   language: 'en',
   allowExport: false,
+  showThemeToggleBtn: true,
   allowImport: false,
+  allowViewSchema: false,
+  showSaveBtn: true,
 }
 
-const saveData = (sections: any) => {
-  console.log(sections.value)
-}
+const saveData = (sections: any) => {}
 </script>
 
 <style scoped>

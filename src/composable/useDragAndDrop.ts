@@ -1,49 +1,54 @@
 import type { Ref } from 'vue'
 import type { SortableEvent } from 'sortablejs'
 import type { FormField, FormSection } from '@/types/fields'
+import { useFormBuilderStore } from '@/store/formBuilder'
 
-export function useDragAndDrop(section: Ref<FormSection>) {
-  const onDragStart = (evt: SortableEvent) => {
-    console.log('Drag started:', evt)
-  }
+export function useDragAndDrop(section: Ref<FormSection>, saved?: () => void) {
+  const onDragStart = (evt: any) => {}
 
   const onDragEnd = (evt: SortableEvent) => {
-    console.log('Drag ended:', evt)
+    if (saved) {
+      saved()
+    }
   }
 
   const onMove = (evt: any) => {
-    console.log('Moving:', evt)
     return true
   }
 
+  // Move a field up
   const moveFieldUp = (fieldIndex: number) => {
-    if (fieldIndex > 0) {
-      const [item] = section.value.fields.splice(fieldIndex, 1)
-      section.value.fields.splice(fieldIndex - 1, 0, item)
-    }
+    if (fieldIndex <= 0) return
+    const [item] = section.value.fields.splice(fieldIndex, 1)
+    if (!item) return
+    section.value.fields.splice(fieldIndex - 1, 0, item)
+    if (saved) saved()
   }
 
+  // Move a field down
   const moveFieldDown = (fieldIndex: number) => {
-    if (fieldIndex < section.value.fields.length - 1) {
-      const [item] = section.value.fields.splice(fieldIndex, 1)
-      section.value.fields.splice(fieldIndex + 1, 0, item)
-    }
+    if (fieldIndex >= section.value.fields.length - 1) return
+    const [item] = section.value.fields.splice(fieldIndex, 1)
+    if (!item) return
+    section.value.fields.splice(fieldIndex + 1, 0, item)
+    if (saved) saved()
   }
 
-  const duplicateField = (field: FormField, fieldIndex: number) => {
-    // Deep clone to avoid reference issues
+  // Duplicate a field
+  const duplicateField = (fieldIndex: number) => {
+    const field = section.value.fields[fieldIndex]
+    if (!field) return
+
     const copy: FormField = JSON.parse(JSON.stringify(field))
-
-    // Generate a guaranteed unique ID
-    const id = parseInt(copy.id.substring(copy.id.lastIndexOf('-') + 1)) + 1
-    copy.id = `${field.id}-${id}`
-
+    copy.id = `${field.id}-${Date.now()}`
     section.value.fields.splice(fieldIndex + 1, 0, copy)
+
+    if (saved) saved()
   }
 
   const editField = (fieldIndex: number) => {
     const field = section.value.fields[fieldIndex]
-    console.log('Open edit dialog for:', field, fieldIndex)
+    if (!field) return
   }
 
   return {
@@ -57,13 +62,22 @@ export function useDragAndDrop(section: Ref<FormSection>) {
   }
 }
 
-export function addSection(sections: Ref<FormSection[]>) {
-  sections.value.push({
+/**
+ * Utility to add a new section
+ */
+export function addSection(sections: Ref<FormSection[]>, saved?: () => void) {
+  const myStore = useFormBuilderStore()
+  const section = {
     id: `section-${Date.now()}`,
     title: `New Section ${sections.value.length + 1}`,
     description: '',
     priority: 0,
+    open: true,
     editable: true,
     fields: [],
-  })
+  }
+
+  sections.value.push(section)
+  myStore.setSections(sections.value)
+  if (saved) saved()
 }

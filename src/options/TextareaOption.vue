@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import type { FormField } from '@/types/fields'
+import SelectInput from '@/components/inputs/SelectInput.vue'
+import TextInput from '@/components/inputs/TextInput.vue'
+import TextareaInput from '@/components/inputs/TextareaInput.vue'
 
 // v-model binding for the field
 const model = defineModel<FormField>('value')
@@ -53,21 +56,21 @@ watch(
   <div class="p-0 space-y-3 w-full max-w-sm">
     <!-- Type -->
     <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Type</label>
-      <n-select v-model:value="textareaOptions.subType" :options="types" size="small" />
+      <label class="block text-sm">Type</label>
+      <SelectInput v-model="textareaOptions.subType" :options="types" size="small" />
     </div>
 
     <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Rows</label>
-      <n-input type="number" v-model:value="textareaOptions.rows" :min="1" size="small" placeholder="Number of rows" />
+      <label class="block text-sm">Rows</label>
+      <textInput type="number" v-model="textareaOptions.rows" :min="1" size="small" placeholder="Number of rows" />
     </div>
 
     <!-- Max Length -->
     <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Max Length</label>
-      <n-input
+      <label class="block text-sm">Max Length</label>
+      <textInput
         type="number"
-        v-model:value="textareaOptions.maxlength"
+        v-model="textareaOptions.maxlength"
         :min="0"
         size="small"
         placeholder="Enter max length"

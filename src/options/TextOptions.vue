@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import type { FormField } from '@/types/fields'
+import SelectInput from '@/components/inputs/SelectInput.vue'
+import TextInput from '@/components/inputs/TextInput.vue'
 
 // v-model binding for the field
 const model = defineModel<FormField>('value')
@@ -52,20 +54,14 @@ watch(
   <div class="p-0 space-y-3 w-full max-w-sm">
     <!-- Type -->
     <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Type</label>
-      <n-select v-model:value="textOptions.textType" :options="types" size="small" placeholder="Type" />
+      <label class="block text-sm">Type</label>
+      <SelectInput v-model="textOptions.textType" :options="types" size="small" placeholder="Type" />
     </div>
 
     <!-- Max Length -->
     <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Max Length</label>
-      <n-input
-        type="number"
-        v-model:value="textOptions.maxlength"
-        :min="0"
-        size="small"
-        placeholder="Enter max length"
-      />
+      <label class="block text-sm">Max Length</label>
+      <TextInput type="number" v-model="textOptions.maxlength" :min="0" size="small" placeholder="Enter max length" />
     </div>
   </div>
 </template>

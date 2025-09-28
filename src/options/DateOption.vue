@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import type { FormField } from '@/types/fields'
-import { NInput } from 'naive-ui'
+import TextInput from '@/components/inputs/TextInput.vue'
 
 // v-model binding for the field
 const model = defineModel<FormField>('value')
@@ -47,20 +47,20 @@ watch(
   <div class="p-0 space-y-3 w-full max-w-sm">
     <!-- Format -->
     <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Format</label>
-      <n-input v-model:value="dateOptions.format" size="small" placeholder="YYYY-MM-DD" />
+      <label class="block text-sm">Format</label>
+      <TextInput type="date" v-model="dateOptions.format" size="small" placeholder="YYYY-MM-DD" />
     </div>
 
     <!-- Min Date -->
     <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Min Date</label>
-      <n-input v-model:value="dateOptions.min" size="small" placeholder="Min date" />
+      <label class="block text-sm">Min Date</label>
+      <TextInput type="date" v-model="dateOptions.min" size="small" placeholder="Min date" />
     </div>
 
     <!-- Max Date -->
     <div>
-      <label class="block text-sm text-gray-600 dark:text-gray-300">Max Date</label>
-      <n-input v-model:value="dateOptions.max" size="small" placeholder="Max date" />
+      <label class="block text-sm">Max Date</label>
+      <TextInput type="date" v-model="dateOptions.max" size="small" placeholder="Max date" />
     </div>
   </div>
 </template>

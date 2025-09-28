@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import type { FormField } from '@/types/fields'
+import TextareaInput from '../inputs/TextareaInput.vue'
 
 // v-model binding for the field
 const model = defineModel<FormField>('value')
@@ -38,10 +39,11 @@ watch(
 
 <template>
   <div class="w-full">
-    <n-input
+    <TextareaInput
       type="textarea"
       class="!w-full"
-      v-model:value="inputState.text"
+      :max="model?.max"
+      v-model="inputState.text"
       :rows="model?.rows || 3"
       placeholder="Enter text..."
     />

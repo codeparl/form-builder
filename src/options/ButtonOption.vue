@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import type { FormField } from '@/types/fields'
-import { NInput, NSelect } from 'naive-ui'
+import SelectInput from '@/components/inputs/SelectInput.vue'
+import TextInput from '@/components/inputs/TextInput.vue'
 
 // v-model binding for the field
 const model = defineModel<FormField>('value')
@@ -11,7 +12,7 @@ const buttonOptions = reactive({
   value: model.value?.value || null,
   type: model.value?.subType || 'primary',
   size: model.value?.size || 'medium',
-  style: model.value?.style || '',
+  style: model.value?.buttonStyle || '',
 })
 
 const types = [
@@ -53,7 +54,7 @@ watch(
         value: val.value,
         subType: val.type,
         size: val.size,
-        style: val.style,
+        buttonStyle: val.style,
       }
     }
   },
@@ -66,20 +67,20 @@ watch(
     <!-- Label -->
     <div>
       <label class="block text-sm text-gray-600 dark:text-gray-300">Value</label>
-      <n-input v-model:value="buttonOptions.value" placeholder="Button text" size="small" />
+      <TextInput v-model="buttonOptions.value" placeholder="Button text" size="small" />
     </div>
 
     <!-- Type -->
     <div>
       <label class="block text-sm text-gray-600 dark:text-gray-300">Type</label>
-      <n-select v-model:value="buttonOptions.type" :options="types" size="small" />
+      <SelectInput v-model="buttonOptions.type" :options="types" size="small" />
     </div>
 
     <!-- Size -->
     <div>
       <label class="block text-sm text-gray-600 dark:text-gray-300">Size</label>
-      <n-select
-        v-model:value="buttonOptions.size"
+      <SelectInput
+        v-model="buttonOptions.size"
         :options="[
           { label: 'Tiny', value: 'tiny' },
           { label: 'Small', value: 'small' },
@@ -92,7 +93,7 @@ watch(
     <!-- Size -->
     <div>
       <label class="block text-sm text-gray-600 dark:text-gray-300">Button Style</label>
-      <n-select v-model:value="buttonOptions.style" :options="buttonStyle" size="small" />
+      <SelectInput v-model="buttonOptions.style" :options="buttonStyle" size="small" />
     </div>
   </div>
 </template>

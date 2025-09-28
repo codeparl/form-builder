@@ -1,6 +1,6 @@
 # Vue Form Builder
 
-[![npm version](https://badge.fury.io/js/form-builder.svg)](https://badge.fury.io/js/form-builder)
+[![npm version](https://badge.fury.io/js/%40unnovate-brains%2Fform-builder.svg)](https://badge.fury.io/js/%40unnovate-brains%2Fform-builder)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A powerful, flexible, and customizable form builder component library for Vue 3 applications. Build dynamic forms with drag-and-drop functionality, multiple field types, internationalization support, and seamless integration with your existing Vue ecosystem.
@@ -23,19 +23,19 @@ A powerful, flexible, and customizable form builder component library for Vue 3 
 ### NPM
 
 ```bash
-npm install form-builder
+npm install @unnovate-brains/form-builder
 ```
 
 ### Yarn
 
 ```bash
-yarn add form-builder
+yarn add @unnovate-brains/form-builder
 ```
 
 ### PNPM
 
 ```bash
-pnpm add form-builder
+pnpm add @unnovate-brains/form-builder
 ```
 
 ## 🚀 Quick Start
@@ -48,7 +48,7 @@ pnpm add form-builder
 </template>
 
 <script setup lang="ts">
-import { FormBuilder } from 'form-builder'
+import { FormBuilder } from '@unnovate-brains/form-builder'
 
 const handleSave = sections => {
   console.log('Form saved:', sections)
@@ -64,7 +64,7 @@ const handleSave = sections => {
 </template>
 
 <script setup lang="ts">
-import { FormBuilder } from 'form-builder'
+import { FormBuilder } from '@unnovate-brains/form-builder'
 
 const formBuilderOptions = {
   language: 'en',
@@ -105,7 +105,7 @@ const handleSave = sections => {
 </template>
 
 <script setup lang="ts">
-import { FormRenderer } from 'form-builder'
+import { FormRenderer } from '@unnovate-brains/form-builder'
 
 const handleFormUpdate = formData => {
   console.log('Form data updated:', formData)
@@ -220,7 +220,7 @@ The library supports multiple languages out of the box:
 ### Custom Language
 
 ```typescript
-import { FormBuilder } from 'form-builder'
+import { FormBuilder } from '@unnovate-brains/form-builder'
 
 // Add custom language
 const customMessages = {
@@ -286,7 +286,7 @@ module.exports = {
 </template>
 
 <script setup lang="ts">
-import { FormBuilder } from 'form-builder'
+import { FormBuilder } from '@unnovate-brains/form-builder'
 
 const handleSave = sections => {
   // Handle form save
@@ -310,7 +310,7 @@ const handleSave = sections => {
 </template>
 
 <script setup lang="ts">
-import { FormBuilder, FormRenderer } from 'form-builder'
+import { FormBuilder, FormRenderer } from '@unnovate-brains/form-builder'
 import { ref } from 'vue'
 
 const formSections = ref([])
@@ -426,7 +426,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- 📧 **Email**: <hassan.mugabo@supernova-corp.com>
+- 📧 **Email**: <cybarox@gmail.com>
 - 🐛 **Issues**: [GitHub Issues](https://github.com/codeparl/form-builder/issues)
 - 💬 **Discussions**: [GitHub Discussions](https://github.com/codeparl/form-builder/discussions)
 

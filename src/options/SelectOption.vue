@@ -2,6 +2,10 @@
 import { reactive } from 'vue'
 import type { FormField } from '@/types/fields'
 
+// Components
+import TextInput from '@/components/inputs/TextInput.vue'
+import ButtonInput from '@/components/inputs/ButtonInput.vue'
+
 // Icons
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import DeleteIcon from 'vue-material-design-icons/Close.vue'
@@ -39,30 +43,31 @@ const syncModel = () => {
 
 <template>
   <div class="p-0 space-y-3 w-full max-w-sm">
-    <label class="block text-sm text-gray-600 dark:text-gray-300">Options</label>
+    <label class="block text-sm">Options</label>
 
     <!-- Render each option input -->
     <div v-for="(option, index) in selectOptions.items" :key="index" class="flex items-center gap-2">
-      <n-input
-        v-model:value="selectOptions.items[index]"
+      <TextInput
+        v-model="selectOptions.items[index]"
         size="small"
         placeholder="Enter option"
         @input="syncModel"
         class="flex-1"
       />
-      <n-button size="tiny" type="error" ghost @click="removeOption(index)">
-        <template #icon>
-          <delete-icon />
-        </template>
-      </n-button>
+      <ButtonInput
+        size="tiny"
+        class="bg-transparent border-0 hover:bg-transparent !text-red-600"
+        type="error"
+        @click="removeOption(index)"
+      >
+        <DeleteIcon />
+      </ButtonInput>
     </div>
 
     <!-- Add option button -->
-    <n-button size="tiny" type="primary" ghost @click="addOption">
-      <template #icon>
-        <plus-icon />
-      </template>
-      Add Option
-    </n-button>
+    <ButtonInput size="small" :is-outline="true" class="flex justify-between" type="success" @click="addOption">
+      <PlusIcon />
+      <span>Add Option</span>
+    </ButtonInput>
   </div>
 </template>

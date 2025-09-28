@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { reactive, watch } from 'vue'
 import type { FormField } from '@/types/fields'
 
 // v-model binding for the field

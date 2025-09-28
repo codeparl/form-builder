@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useMessage, useDialog } from 'naive-ui'
 import type { FormSection } from '../types/fields'
 import { useI18n } from '@/i18n/useI18n'
+import Modal from '@/components/Modal.vue'
 
 // Vue Material Icons
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
@@ -11,63 +11,70 @@ import CloudUploadIcon from 'vue-material-design-icons/CloudUpload.vue'
 import CloudDownloadIcon from 'vue-material-design-icons/CloudDownload.vue'
 import CodeTagsIcon from 'vue-material-design-icons/CodeTags.vue'
 import ContentSaveIcon from 'vue-material-design-icons/ContentSave.vue'
+import LightModeIcon from 'vue-material-design-icons/WhiteBalanceSunny.vue'
+import DarkModeIcon from 'vue-material-design-icons/MoonWaningCrescent.vue'
 
+import { dialog } from '@/plugins/dialog'
+import { useFormBuilderTheme } from '@/store/theme'
+
+const theme = useFormBuilderTheme()
 const { t } = useI18n()
 
-// Props & emits
+// Props & Emits
 const props = defineProps<{
   formSections: FormSection[]
-  allowImport?: boolean
-  allowExport?: boolean
+  options?: {
+    darkMode?: boolean
+    language?: string
+    showToolbar?: boolean
+    maxFields?: number
+    allowExport?: boolean
+    allowImport?: boolean
+    showSaveBtn?: boolean
+    showThemeToggleBtn?: boolean
+    allowViewSchema?: boolean
+  }
 }>()
-const emit = defineEmits(['clear', 'save', 'add-section', 'import', 'export'])
 
+const emit = defineEmits<{
+  (e: 'clear'): void
+  (e: 'save', payload: FormSection[]): void
+  (e: 'add-section'): void
+  (e: 'import', payload: FormSection[]): void
+  (e: 'export', payload: FormSection[]): void
+}>()
+
+// JSON modal state
 const showJson = ref(false)
 const fileInputRef = ref<HTMLInputElement | null>(null)
-const message = useMessage()
-const dialog = useDialog()
 
 // Computed flags from options
-const allowExport = computed(() => props.allowExport ?? true)
-const allowImport = computed(() => props.allowImport ?? true)
+const allowExport = computed(() => props.options?.allowExport ?? true)
+const allowImport = computed(() => props.options?.allowImport ?? true)
+const showSaveBtn = computed(() => props.options?.showSaveBtn ?? true)
+const showThemeToggleBtn = computed(() => props.options?.showThemeToggleBtn ?? true)
+const allowViewSchema = computed(() => props.options?.allowViewSchema ?? true)
 
 // JSON representation
 const formattedJson = computed(() => JSON.stringify(props.formSections, null, 2))
 
-// Clear all sections
+// Actions
 const onClear = () => {
   dialog.warning({
     title: t('Confirm Deletion'),
     content: t('Are you sure you want to delete all sections? This action cannot be undone.'),
     positiveText: t('Yes, delete'),
     negativeText: t('Cancel'),
-    onPositiveClick: () => {
-      emit('clear')
-      message.warning(t('All sections cleared!'))
-    },
+    onPositiveClick: () => emit('clear'),
   })
 }
 
-// View JSON
-const onViewJson = () => {
-  showJson.value = true
-}
-
-// Save
-const onSave = () => {
-  emit('save', props.formSections)
-}
-
-// Add Section
+const onViewJson = () => (showJson.value = true)
+const onSave = () => emit('save', props.formSections)
 const onAddSection = () => emit('add-section')
 
-// Export JSON
 const onExport = () => {
-  if (!allowExport.value) {
-    message.error(t('Exporting is disabled for this form.'))
-    return
-  }
-
+  if (!allowExport.value) return
   const blob = new Blob([formattedJson.value], { type: 'application/json' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
@@ -76,120 +83,118 @@ const onExport = () => {
   a.click()
   URL.revokeObjectURL(url)
   emit('export', props.formSections)
-  message.success(t('Form exported!'))
 }
 
-// Trigger file input
 const onImport = () => {
-  if (!allowImport.value) {
-    message.error(t('Importing is disabled for this form.'))
-    return
-  }
+  if (!allowImport.value) return
   fileInputRef.value?.click()
 }
 
-// Handle uploaded JSON
 const onFileChange = async (event: Event) => {
   if (!allowImport.value) return
-
   const target = event.target as HTMLInputElement
-  if (!target.files?.length) return
-  const file = target.files[0]
+  const file = target.files?.[0]
+  if (!file) return
 
   try {
     const text = await file.text()
     const parsed = JSON.parse(text)
     if (!Array.isArray(parsed)) throw new Error('Invalid JSON structure')
     emit('import', parsed)
-    message.success(t('Form imported successfully!'))
-  } catch (err: any) {
-    message.error(t('Failed to import JSON: ') + err.message)
+  } catch (err) {
+    console.error(err)
   } finally {
     target.value = ''
   }
 }
+
+const buttonDark = computed(() => {
+  return [theme.darkMode ? '!bg-transparent hover:!text-gray-100 !text-gray-300 !border-0' : '']
+})
 </script>
 
 <template>
   <div
-    class="flex items-center justify-between p-2 dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700 rounded-t-lg"
+    :class="[
+      theme.darkMode ? 'bg-neutral-900 text-gray-300 border-gray-700' : 'border-gray-300 text-gray-800 bg-white',
+    ]"
+    class="flex items-center justify-between p-2 border-b rounded-t-lg"
   >
     <!-- Title -->
-    <h3 class="text-base font-semibold text-gray-800 dark:text-gray-200">
+    <h3 class="text-base font-semibold">
       {{ t('canvas.heading') }}
     </h3>
 
-    <!-- Icon-only Toolbar -->
-    <div class="flex items-center gap-2">
-      <n-tooltip placement="bottom" trigger="hover">
-        <template #trigger>
-          <n-button size="tiny" class="!p-3 !px-2" type="success" @click="onAddSection">
-            <template #icon><PlusIcon /></template>
-          </n-button>
-        </template>
-        <span>{{ t('toolbar.addSection') }}</span>
-      </n-tooltip>
+    <!-- Toolbar -->
+    <div class="flex items-center gap-2" v-if="props.options?.showToolbar ?? true">
+      <!-- Theme toggle -->
+      <Tooltip
+        v-if="showThemeToggleBtn"
+        :content="theme.darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+        placement="bottom"
+      >
+        <ButtonInput @click="theme.toggleDark()" size="tiny" class="p-0 rounded">
+          <LightModeIcon v-if="!theme.darkMode" />
+          <DarkModeIcon v-else />
+        </ButtonInput>
+      </Tooltip>
 
-      <n-tooltip placement="bottom" trigger="hover">
-        <template #trigger>
-          <n-button size="tiny" class="!p-3 !px-2" type="error" @click="onClear">
-            <template #icon><DeleteIcon /></template>
-          </n-button>
-        </template>
-        <span>{{ t('toolbar.clear') }}</span>
-      </n-tooltip>
+      <!-- Add Section -->
+      <Tooltip :content="t('toolbar.addSection')" placement="bottom">
+        <ButtonInput size="tiny" :class="buttonDark" class="!p-0" @click="onAddSection">
+          <PlusIcon />
+        </ButtonInput>
+      </Tooltip>
+
+      <!-- Clear -->
+      <Tooltip :content="t('toolbar.clear')" placement="bottom" trigger="hover">
+        <ButtonInput size="tiny" :class="buttonDark" class="!p-0" @click="onClear">
+          <DeleteIcon />
+        </ButtonInput>
+      </Tooltip>
 
       <!-- Import -->
-      <n-tooltip v-if="allowImport" placement="bottom" trigger="hover">
-        <template #trigger>
-          <n-button size="tiny" class="!p-3 !px-2" type="warning" @click="onImport">
-            <template #icon><CloudUploadIcon /></template>
-          </n-button>
-        </template>
-        <span>{{ t('toolbar.import') }}</span>
-      </n-tooltip>
+      <Tooltip v-if="allowImport" :content="t('toolbar.import')" placement="bottom" trigger="hover">
+        <ButtonInput size="tiny" :class="buttonDark" class="!p-0" @click="onImport">
+          <CloudDownloadIcon />
+        </ButtonInput>
+      </Tooltip>
       <input ref="fileInputRef" type="file" accept="application/json" class="hidden" @change="onFileChange" />
 
       <!-- Export -->
-      <n-tooltip v-if="allowExport" placement="bottom" trigger="hover">
-        <template #trigger>
-          <n-button size="tiny" class="!p-3 !px-2" type="success" @click="onExport">
-            <template #icon><CloudDownloadIcon /></template>
-          </n-button>
-        </template>
-        <span>{{ t('toolbar.export') }}</span>
-      </n-tooltip>
+      <Tooltip v-if="allowExport" :content="t('toolbar.export')" placement="bottom" trigger="hover">
+        <ButtonInput size="tiny" :class="buttonDark" class="!p-0" @click="onExport">
+          <CloudUploadIcon />
+        </ButtonInput>
+      </Tooltip>
 
-      <n-tooltip placement="bottom" trigger="hover">
-        <template #trigger>
-          <n-button size="tiny" class="!p-3 !px-2" type="info" @click="onViewJson">
-            <template #icon><CodeTagsIcon /></template>
-          </n-button>
-        </template>
-        <span>{{ t('toolbar.viewJson') }}</span>
-      </n-tooltip>
+      <!-- View JSON -->
+      <Tooltip v-if="allowViewSchema" :content="t('toolbar.viewJson')" placement="bottom" trigger="hover">
+        <ButtonInput :class="buttonDark" size="tiny" class="!p-0" @click="onViewJson">
+          <CodeTagsIcon />
+        </ButtonInput>
+      </Tooltip>
 
-      <n-tooltip placement="bottom" trigger="hover">
-        <template #trigger>
-          <n-button size="tiny" class="!p-3 !px-2" type="primary" @click="onSave">
-            <template #icon><ContentSaveIcon /></template>
-          </n-button>
-        </template>
-        <span>{{ t('toolbar.save') }}</span>
-      </n-tooltip>
+      <!-- Save -->
+      <Tooltip v-if="showSaveBtn" :content="t('toolbar.save')" placement="bottom" trigger="hover">
+        <ButtonInput size="tiny" :class="buttonDark" class="!p-0" @click="onSave">
+          <ContentSaveIcon />
+        </ButtonInput>
+      </Tooltip>
     </div>
   </div>
 
   <!-- JSON Modal -->
-  <n-modal
-    v-model:show="showJson"
-    preset="card"
-    style="width: 75rem; max-width: 95vw"
-    title="Form Data JSON"
-    :mask-closable="true"
-  >
-    <div class="overflow-y-auto p-3 bg-gray-900 text-green-300 rounded" style="max-height: 80vh; white-space: pre-wrap">
+  <Modal v-model="showJson" :prevent-scroll="true" title="Form Data JSON">
+    <div
+      class="overflow-y-auto p-3 rounded-md bg-slate-900 text-green-300"
+      style="max-height: 80vh; white-space: pre-wrap"
+    >
       <pre class="text-sm">{{ formattedJson }}</pre>
     </div>
-  </n-modal>
+  </Modal>
 </template>
+
+<style scoped>
+/* Optional: you can tweak button spacing, hover, etc. */
+</style>

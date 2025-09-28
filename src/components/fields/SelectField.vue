@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import type { FormField } from '@/types/fields'
-import { NSelect } from 'naive-ui'
+import SelectInput from '../inputs/SelectInput.vue'
 
 // v-model binding for the field
 const model = defineModel<FormField>('value')
@@ -39,8 +39,8 @@ watch(
 
 <template>
   <div class="w-full">
-    <n-select
-      v-model:value="inputState.selected"
+    <SelectInput
+      v-model="inputState.selected"
       :options="model?.options?.map(o => ({ label: o, value: o }))"
       size="small"
       placeholder="Select an option"

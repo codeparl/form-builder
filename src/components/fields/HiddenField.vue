@@ -37,5 +37,5 @@ watch(
 </script>
 
 <template>
-  <n-input type="hidden" :name="model?.name" v-model="inputState.hidden" />
+  <TextInput type="hidden" :name="model?.name" v-model="inputState.hidden" />
 </template>
