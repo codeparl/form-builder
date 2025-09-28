@@ -1,6 +1,6 @@
 {
   "name": "@unnovate-brains/form-builder",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "type": "module",
   "description": "A Form Builder Component for Vue 3",
   "main": "dist/index.umd.js",
