@@ -1,0 +1,6 @@
+src/
+tests/
+.vscode/
+*.ts
+*.vue
+*.spec.ts
