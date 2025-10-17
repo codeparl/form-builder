@@ -7,9 +7,11 @@ import SelectInput from '@/components/inputs/SelectInput.vue'
 // v-model binding for the field
 const model = defineModel<FormField>('value')
 if (model.value) {
-  model.value.category = 'hidden'
+  model.value.category = 'html'
   model.value.text = 'Paragraph'
 }
+
+
 // Local reactive state for paragraph options
 const paragraphOptions = reactive({
   text: model.value?.text ?? '',
@@ -47,6 +49,7 @@ watch(
         ...model.value,
         text: val.text,
         subType: val.subType,
+        category: 'html',
       }
     }
   },

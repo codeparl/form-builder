@@ -5,6 +5,7 @@ const props = defineProps({
   modelValue: { type: Boolean, default: false },
   label: { type: String, default: '' },
   disabled: { type: Boolean, default: false },
+  id: { type: String, default: '' },
 })
 
 const emit = defineEmits(['update:modelValue', 'change'])
@@ -16,6 +17,9 @@ const checked = computed({
     emit('change', val)
   },
 })
+
+// Generate fallback ID if none provided
+const inputId = computed(() => props.id || `checkbox-${Math.random().toString(36).substr(2, 9)}`)
 </script>
 
 <template>

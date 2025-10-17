@@ -1,79 +1,58 @@
 <template>
   <teleport to="body">
-    <div class="ub-vue-form-builder">
-      <transition
-        enter-active-class="transition ease-out duration-300"
-        enter-from-class="opacity-0 -translate-y-8 scale-95"
-        enter-to-class="opacity-100 translate-y-0 scale-100"
-        leave-active-class="transition ease-in duration-200"
-        leave-from-class="opacity-100 translate-y-0 scale-100"
-        leave-to-class="opacity-0 -translate-y-8 scale-95"
-      >
-        <div
-          v-if="modelValue"
-          class="fixed inset-0 z-50 flex overflow-hidden items-start justify-center px-4 sm:px-6 pt-20"
-          role="dialog"
-          aria-modal="true"
-          :aria-labelledby="title ? 'modal-title' : undefined"
-        >
+    <div class="ub-vue-form-builder  relative">
+      <transition enter-active-class="transition ease-out duration-300"
+        enter-from-class="opacity-0 -translate-y-8 scale-95" enter-to-class="opacity-100 translate-y-0 scale-100"
+        leave-active-class="transition ease-in duration-200" leave-from-class="opacity-100 translate-y-0 scale-100"
+        leave-to-class="opacity-0 -translate-y-8 scale-95">
+        <div v-if="modelValue"
+          class="fixed inset-0 z-50 flex overflow-hidden items-start justify-center px-4 sm:px-6 pt-20" role="dialog"
+          aria-modal="true" :aria-labelledby="title ? 'modal-title' : undefined">
           <!-- Transparent Backdrop -->
-          <div
-            class="absolute inset-0 bg-black/45 backdrop-blur-sm"
-            :class="{ 'cursor-pointer': maskClosable }"
-            @click="handleBackdropClick"
-            @mousedown="handleBackdropMouseDown"
-          />
+          <div class="absolute inset-0 bg-black/45 backdrop-blur-sm" :class="{ 'cursor-pointer': maskClosable }"
+            @click="handleBackdropClick" @mousedown="handleBackdropMouseDown" />
 
           <!-- Modal Card -->
+
           <div
-            class="relative flex border flex-col rounded-md shadow-2xl max-h-[90vh] w-full overflow-hidden transform transition-all"
-            :style="modalStyle"
-            :class="[
-              theme.darkMode ? 'bg-neutral-900 border-gray-800 text-gray-400' : 'bg-white border-0 text-gray-800',
-            ]"
-          >
+            class="relative flex flex-col  rounded-md shadow-2xl max-h-[90vh] overflow-hidden transform transition-all"
+            :style="modalStyle" :class="[
+              theme.darkMode ? 'bg-neutral-900 border border-gray-800 text-gray-300' : 'bg-white border border-gray-200 text-gray-800',
+            ]">
             <!-- Header -->
-            <div
-              v-if="showHeader"
-              :class="[theme.darkMode ? 'border-gray-800' : 'border-gray-200']"
-              class="flex items-start justify-between px-6 py-4 border-b"
-            >
-              <div class="flex-1 min-w-0 overflow-hidden">
+            <div v-if="showHeader" class="flex h-[50px] w-full items-start justify-between px-6 py-4 border-b "
+              :class="[theme.darkMode ? 'border-gray-800' : 'border-gray-200']">
+              <div class="flex-1 min-w-0 truncate">
                 <h2 v-if="title" id="modal-title" class="text-lg font-semibold truncate">
                   {{ title }}
                 </h2>
                 <slot name="header" />
               </div>
-              <ButtonInput
-                v-if="showCloseButton"
-                @click="close"
-                type="default"
-                size="tiny"
-                aria-label="Close modal"
-                class="ml-3 inline-flex border-0 items-center justify-center w-9 h-9 hover:text-gray-500"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 20 20">
+              <ButtonInput v-if="showCloseButton" @click="close" type="default" size="tiny" aria-label="Close modal"
+                class="ml-3 inline-flex border-0 items-center justify-center  hover:!text-gray-100"
+                :class="[theme.darkMode ? '!text-gray-300' : 'text-gray-500']">
+
+                <svg class=" w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 20 20">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 5L5 15M5 5l10 10" />
                 </svg>
               </ButtonInput>
             </div>
 
             <!-- Content -->
-            <div
-              class="flex-1 overflow-hidden px-2 py-4"
-              :class="{
-                'pt-2': showHeader,
-                'pb-2': showFooter,
-              }"
-            >
+            <div class=" overflow-hidden w-full  px-6 py-4" :class="{
+              'pt-2': showHeader,
+              'pb-2': showFooter,
+            }">
               <slot />
             </div>
 
             <!-- Footer -->
-            <div v-if="showFooter" class="px-6 py-4 border-t border-gray-200">
+            <div v-if="showFooter" class="px-6 py-4 border-t shrink-0"
+              :class="[theme.darkMode ? 'border-gray-800' : 'border-gray-200']">
               <slot name="footer" />
             </div>
           </div>
+
         </div>
       </transition>
     </div>

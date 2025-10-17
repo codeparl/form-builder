@@ -8,6 +8,8 @@ const props = defineProps({
   size: { type: String, default: 'medium' },
   disabled: { type: Boolean, default: false },
   placeholder: { type: String, default: 'Select...' },
+  label: { type: String, default: '' },
+  id: { type: String, default: '' },
 })
 
 const emit = defineEmits(['update:modelValue', 'change'])
@@ -40,6 +42,9 @@ const sizeClass = computed(() => {
   }
 })
 
+// Generate fallback ID if none provided
+const inputId = computed(() => props.id || `select-${Math.random().toString(36).substr(2, 9)}`)
+
 const handleClickOutside = (e: MouseEvent) => {
   if (triggerRef.value && !triggerRef.value.contains(e.target as Node)) {
     isOpen.value = false
@@ -55,71 +60,77 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="triggerRef" class="relative w-full inline-block">
-    <!-- Trigger -->
-    <div
-      class="flex items-center justify-between border rounded shadow-sm cursor-pointer transition duration-150 ease-in-out focus:ring-1"
-      :class="[
-        sizeClass,
-        { ' cursor-not-allowed opacity-60': disabled },
-        theme.darkMode
-          ? 'bg-neutral-900 border-gray-600 hover:border-gray-400 focus:ring-gray-500 '
-          : 'bg-white hover:border-green-500 focus:ring-green-500  border-gray-300',
-      ]"
-      @click="toggleDropdown"
-    >
-      <span class="text-gray-700">
-        {{ selectedOption ? selectedOption.label : placeholder }}
-      </span>
+  <div class="flex flex-col space-y-1">
+    <label v-if="label" :for="inputId" class="text-sm font-medium text-gray-700 dark:text-gray-300">
+      {{ label }}
+    </label>
 
-      <!-- Chevron Icon -->
-      <svg
-        class="w-4 h-4 text-gray-500 transition-transform duration-200"
-        :class="{ 'rotate-180': isOpen }"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        viewBox="0 0 24 24"
+    <div ref="triggerRef" class="relative w-full inline-block">
+      <!-- Trigger -->
+      <div
+        class="flex items-center justify-between border rounded shadow-sm cursor-pointer transition duration-150 ease-in-out focus:ring-1"
+        :class="[
+          sizeClass,
+          { ' cursor-not-allowed opacity-60': disabled },
+          theme.darkMode
+            ? 'bg-neutral-900 border-gray-600 hover:border-gray-400 focus:ring-gray-500 '
+            : 'bg-white hover:border-green-500 focus:ring-green-500  border-gray-300',
+        ]"
+        @click="toggleDropdown"
       >
-        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-      </svg>
-    </div>
+        <span class="text-gray-700">
+          {{ selectedOption ? selectedOption.label : placeholder }}
+        </span>
 
-    <!-- Dropdown -->
-    <transition name="fade">
-      <ul
-        v-if="isOpen"
-        :class="[theme.darkMode ? 'border-gray-800 text-gray-400 bg-neutral-900 ' : 'border-gray-200 bg-white ']"
-        class="absolute left-0 z-50 p-2 mt-1 w-full max-h-60 overflow-y-auto rounded border shadow-lg"
-        @click.stop
-      >
-        <li
-          v-for="opt in options"
-          :key="opt.value"
-          class="px-3 py-2 flex justify-between items-center cursor-pointer hover:bg-gray-200"
-          :class="{
-            'text-green-600 font-medium bg-gray-100': opt.value === modelValue,
-            'bg-neutral-800': opt.value === modelValue && theme.darkMode,
-            'hover:bg-neutral-800': theme.darkMode,
-          }"
-          @click.stop="selectOption(opt)"
+        <!-- Chevron Icon -->
+        <svg
+          class="w-4 h-4 text-gray-500 transition-transform duration-200"
+          :class="{ 'rotate-180': isOpen }"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
         >
-          <span>{{ opt.label }}</span>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
 
-          <!-- Checkmark only for selected -->
-          <svg
-            v-if="opt.value === modelValue"
-            class="w-4 h-4 text-green-600"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
+      <!-- Dropdown -->
+      <transition name="fade">
+        <ul
+          v-if="isOpen"
+          :class="[theme.darkMode ? 'border-gray-800 text-gray-400 bg-neutral-900 ' : 'border-gray-200 bg-white ']"
+          class="absolute left-0 z-50 p-2 mt-1 w-full max-h-60 overflow-y-auto rounded border shadow-lg"
+          @click.stop
+        >
+          <li
+            v-for="opt in options"
+            :key="opt.value"
+            class="px-3 py-2 flex justify-between items-center cursor-pointer hover:bg-gray-200"
+            :class="{
+              'text-green-600 font-medium bg-gray-100': opt.value === modelValue,
+              'bg-neutral-800': opt.value === modelValue && theme.darkMode,
+              'hover:bg-neutral-800': theme.darkMode,
+            }"
+            @click.stop="selectOption(opt)"
           >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-          </svg>
-        </li>
-      </ul>
-    </transition>
+            <span>{{ opt.label }}</span>
+
+            <!-- Checkmark only for selected -->
+            <svg
+              v-if="opt.value === modelValue"
+              class="w-4 h-4 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </li>
+        </ul>
+      </transition>
+    </div>
   </div>
 </template>
 

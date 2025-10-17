@@ -9,6 +9,8 @@ const props = defineProps<{
   max?: number
   size?: 'small' | 'medium' | 'large'
   rows?: number
+  label?: string
+  id?: string
 }>()
 
 const emit = defineEmits(['update:modelValue'])
@@ -27,21 +29,31 @@ const sizeClass = computed(() => {
 const onInput = (e: Event) => {
   emit('update:modelValue', (e.target as HTMLTextAreaElement).value)
 }
+
+// Generate fallback ID if none provided
+const inputId = computed(() => props.id || `textarea-${Math.random().toString(36).substr(2, 9)}`)
 </script>
 
 <template>
-  <textarea
-    :rows="props.rows || 4"
-    class="w-full border rounded-sm shadow-sm focus:ring-1 outline-none transition placeholder-gray-400 resize-none"
-    :class="
-      (sizeClass,
-      theme.darkMode
-        ? 'bg-neutral-900 border-gray-800 hover:border-gray-400 focus:ring-gray-500 '
-        : 'bg-white hover:border-green-500 focus:ring-green-500  border-gray-300')
-    "
-    :placeholder="placeholder"
-    :value="modelValue"
-    :maxlength="max"
-    @input="onInput"
-  />
+  <div class="flex flex-col space-y-1">
+    <label v-if="label" :for="inputId" class="text-sm font-medium text-gray-700 dark:text-gray-300">
+      {{ label }}
+    </label>
+
+    <textarea
+      :id="inputId"
+      :rows="props.rows || 4"
+      class="w-full border rounded-sm shadow-sm focus:ring-1 outline-none transition placeholder-gray-400 resize-none"
+      :class="
+        (sizeClass,
+        theme.darkMode
+          ? 'bg-neutral-900 border-gray-800 hover:border-gray-400 focus:ring-gray-500 '
+          : 'bg-white hover:border-green-500 focus:ring-green-500  border-gray-300')
+      "
+      :placeholder="placeholder"
+      :value="modelValue"
+      :maxlength="max"
+      @input="onInput"
+    />
+  </div>
 </template>

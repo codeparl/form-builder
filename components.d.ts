@@ -33,6 +33,7 @@ declare module 'vue' {
     RadioField: typeof import('./src/components/fields/RadioField.vue')['default']
     RadionGroup: typeof import('./src/components/inputs/RadionGroup.vue')['default']
     SectionField: typeof import('./src/components/fields/SectionField.vue')['default']
+    SectionRenderer: typeof import('./src/components/SectionRenderer.vue')['default']
     SelectField: typeof import('./src/components/fields/SelectField.vue')['default']
     SelectInput: typeof import('./src/components/inputs/SelectInput.vue')['default']
     TextAreaField: typeof import('./src/components/fields/TextAreaField.vue')['default']
